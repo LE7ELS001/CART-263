@@ -325,7 +325,8 @@ function setup() {
     }
     /***EXPLANATION::
      * 
-     * 
+     * check3Remainder function will return a result 
+     * the result will be the textContent and will define which color the grid should be
      */
 
     /*************************************** */
