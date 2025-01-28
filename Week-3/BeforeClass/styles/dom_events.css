@@ -34,7 +34,7 @@ div:hover {
 }
 
 .intro-section {
-    background-color: rgba(214, 110, 239, 1.0);
+    background-color: rgba(214, 110, 239, 1);
     padding: 10px;
     width: calc(98% - 20px);
     margin: 0 auto;
