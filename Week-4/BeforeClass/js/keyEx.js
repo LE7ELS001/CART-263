@@ -5,6 +5,7 @@ window.onload = function () {
         console.log(event);
         //document.querySelector("#textContainer").textContent += event.key;
         //document.querySelector("#textContainer").textContent += event.code;
+        console.log(document.getElementById("boxA").style.left);
         let speedX = 5;
         if (event.key === "ArrowRight") {
 
@@ -16,6 +17,7 @@ window.onload = function () {
         }
         else if (event.code === "Space") {
             let bool = document.getElementById("boxB").getAttribute("custom-bool");
+            //console.log(typeof (bool));
             if (bool === "off") {
                 document.getElementById("boxB").style.background = "orange";
                 document.getElementById("boxB").setAttribute("custom-bool", "on");
