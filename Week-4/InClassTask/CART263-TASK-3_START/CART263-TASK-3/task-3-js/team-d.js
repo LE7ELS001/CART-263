@@ -91,14 +91,16 @@ function setup_D() {
 
   function aniA(parentCanvas) {
     console.log("in A");
+    console.log("parentCanvas:", parentCanvas);
 
     //create button
     let button = document.createElement('button');
     button.classList.add("TEAM_D_box");
     button.setAttribute("statement", "cheat");
     button.textContent = 'cheat';
-    let parent = document.getElementById("ani_canvD_A");
-    parent.appendChild(button);
+    // let parent = document.getElementById("ani_canvD_A");
+    // parent.appendChild(button);
+    parentCanvas.appendChild(button);
     //console.log(button);
 
     //grid
@@ -117,7 +119,7 @@ function setup_D() {
         d.style.top = originTop + j * 45 + "px";
         gridCol[j] = d;
 
-        parent.appendChild(d);
+        parentCanvas.appendChild(d);
 
         //console.log(d)
       }
