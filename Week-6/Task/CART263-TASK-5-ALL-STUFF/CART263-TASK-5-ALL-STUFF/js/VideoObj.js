@@ -11,6 +11,7 @@ class VideoObj {
     this.shapeCol = "#000000";
     this.shapeSize = 50;
     this.shapeSizeChangeSpeed = 5;
+    this.statement = "rect";
 
     //blur 
     let filterButton_blur = document.getElementById("filter_button_blur");
@@ -53,7 +54,7 @@ class VideoObj {
 
     filterButton_invert.addEventListener("click", function () {
       self.userProvideInvert = InvertInput.value;
-      console.log(self.userProvideInvert);
+      //console.log(self.userProvideInvert);
     });
 
     //canvas 
@@ -64,7 +65,7 @@ class VideoObj {
     partD_Canvas.addEventListener("mousemove", function (event) {
       let setoff = partD_Canvas.getBoundingClientRect();
       self.updatePositionRect(event.clientX - setoff.x - self.shapeSize / 2, event.clientY - setoff.y - self.shapeSize / 2);
-      console.log(event.clientX);
+      //console.log(event.clientX);
 
     }
     );
@@ -97,6 +98,18 @@ class VideoObj {
     })
 
 
+    partD_Canvas.addEventListener("dblclick", function (event) {
+      console.log("you press")
+      if (self.statement === "rect") {
+        self.statement = "draw";
+      }
+      else {
+        self.statement = "rect";
+      }
+    })
+
+
+
   }
 
 
@@ -110,11 +123,19 @@ class VideoObj {
     this.context.filter = `blur(${this.userProvidedBlur}px) sepia(${this.userProvideSepia}) hue-rotate(${this.userProvideHue}deg) invert(${this.userProvideInvert}%)`;
     this.context.drawImage(this.videoElement, this.x, this.y, this.w, this.h);
 
-    //this.context.fillStyle = this.shapeCol;
-    this.context.lineWeight = 3;
-    this.context.strokeStyle = 'white'
-    this.context.strokeRect(this.shapeX, this.shapeY, this.shapeSize, this.shapeSize);
-    // this.context.fillRect(this.shapeX, this.shapeY, this.shapeSize, this.shapeSize);
+    if (this.statement === "rect") {
+
+      this.context.fillStyle = this.shapeCol;
+      this.context.fillRect(this.shapeX, this.shapeY, this.shapeSize, this.shapeSize);
+    }
+    else {
+
+      this.context.lineWeight = 3;
+      this.context.strokeStyle = 'white'
+      this.context.strokeRect(this.shapeX, this.shapeY, this.shapeSize, this.shapeSize);
+      this.context.fillRect(this.shapeX, this.shapeY, this.shapeSize, this.shapeSize);
+      this.context.drawImage(this.videoElement, this.shapeX, this.shapeY, this.shapeSize, this.shapeSize);
+    }
     this.context.restore();
   }
 
