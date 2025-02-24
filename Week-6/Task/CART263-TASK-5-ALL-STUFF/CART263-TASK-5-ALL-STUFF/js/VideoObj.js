@@ -9,6 +9,8 @@ class VideoObj {
     this.shapeX = 10;
     this.shapeY = 10;
     this.shapeCol = "#000000";
+    this.shapeSize = 50;
+    this.shapeSizeChangeSpeed = 5;
 
     //blur 
     let filterButton_blur = document.getElementById("filter_button_blur");
@@ -52,7 +54,48 @@ class VideoObj {
     filterButton_invert.addEventListener("click", function () {
       self.userProvideInvert = InvertInput.value;
       console.log(self.userProvideInvert);
+    });
+
+    //canvas 
+    let partD_Canvas = document.getElementById("partD");
+    //console.log(partD_Canvas);
+
+    //update rectangle position 
+    partD_Canvas.addEventListener("mousemove", function (event) {
+      let setoff = partD_Canvas.getBoundingClientRect();
+      self.updatePositionRect(event.clientX - setoff.x - self.shapeSize / 2, event.clientY - setoff.y - self.shapeSize / 2);
+      console.log(event.clientX);
+
+    }
+    );
+
+    partD_Canvas.addEventListener('click', function (event) {
+      let r = Math.floor(Math.random() * 256);
+      let g = Math.floor(Math.random() * 256);
+      let b = Math.floor(Math.random() * 256);
+      let randomColor = `rgb(${r},${g},${b})`;
+      self.changeColor(randomColor);
+    });
+
+    partD_Canvas.addEventListener('wheel', function (event) {
+      if (event.deltaY > 0) {
+        if (self.shapeSize <= 50) {
+          self.shapeSize = 50;
+        }
+        else {
+          self.shapeSize -= self.shapeSizeChangeSpeed;
+        }
+      }
+      else {
+        if (self.shapeSize >= 200) {
+          self.shapeSize = 200;
+        }
+        else {
+          self.shapeSize += self.shapeSizeChangeSpeed;
+        }
+      }
     })
+
 
   }
 
@@ -67,18 +110,22 @@ class VideoObj {
     this.context.filter = `blur(${this.userProvidedBlur}px) sepia(${this.userProvideSepia}) hue-rotate(${this.userProvideHue}deg) invert(${this.userProvideInvert}%)`;
     this.context.drawImage(this.videoElement, this.x, this.y, this.w, this.h);
 
-    this.context.fillStyle = this.shapeCol;
-    this.context.fillRect(this.shapeX, this.shapeY, 50, 50)
+    //this.context.fillStyle = this.shapeCol;
+    this.context.lineWeight = 3;
+    this.context.strokeStyle = 'white'
+    this.context.strokeRect(this.shapeX, this.shapeY, this.shapeSize, this.shapeSize);
+    // this.context.fillRect(this.shapeX, this.shapeY, this.shapeSize, this.shapeSize);
     this.context.restore();
   }
 
   //called when rectangle color is to be updated
-  changeColor(newCol) {
-    /** FILL IN */
-  }
   //called when rectangle Pos is to be updated
   updatePositionRect(mx, my) {
-    /** FILL IN */
+    this.shapeX = mx;
+    this.shapeY = my;
+  }
+  changeColor(newCol) {
+    this.shapeCol = newCol;
   }
   update(videoElement) {
     this.videoElement = videoElement;

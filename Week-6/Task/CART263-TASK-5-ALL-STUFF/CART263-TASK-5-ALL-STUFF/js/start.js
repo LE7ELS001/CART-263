@@ -93,7 +93,7 @@ function go_all_stuff() {
     /** TASK 4:(Video - recorded - )
      * // add filters or manipulate the pixels... take user input from the boxes.. (filter/ manipulate pixels)--(take user input) 
      *  1: using thr provided VideoObj class - > 
-     * you will see all the code needed for activating  a blur filter on the video - activate it (active the blurfilter )
+     * you will see all the code needed for activating  a blur filter on the video - activate it (active the blurfilter button )
      * 2: Next: apply the same logic to enable the other 3 possible filters (adding the event listeners etc) --(4 in total)
      * -> make sure to look at the input/output ranges for the values (set the input range)
      * 3: -> apply the context filters  to the video for the three filter options (and activate the blur as well)
