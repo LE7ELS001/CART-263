@@ -1,0 +1,43 @@
+class Boot extends Phaser.Scene {
+    constructor() {
+        super({
+            key: 'boot'
+        });
+    }
+
+    preload() {
+
+        //load Player Assets
+        this.load.spritesheet("avatar-idle", "Assets/Character/Player/_Idle.png", {
+            frameWidth: 120,
+            frameHeight: 80,
+            endFrame: 9
+        });
+
+        this.load.spritesheet("avatar-run", "Assets/Character/Player/_Run.png", {
+            frameWidth: 120,
+            frameHeight: 80,
+            endFrame: 9
+        });
+
+        //load map tile
+        this.load.tilemapTiledJSON('testMap', "Assets/Map/TestMap.json");
+        this.load.image('tiles-1', 'Assets/Tiles/ForestTiles.png');
+
+
+        this.load.image("Test-tile", "Assets/Tiles/Forest/Tiles.png");
+
+
+        this.load.on('complete', () => {
+            this.scene.start('scene1');
+        });
+    }
+
+    create() {
+
+    }
+
+    update() {
+
+    }
+}
