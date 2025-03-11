@@ -20,13 +20,14 @@ function PlayerAnimation(anims) {
         repeat: -1
     });
 
+
     anims.create({
         key: "jump",
         frames: anims.generateFrameNumbers("avatar-jump", {
             start: 0,
             end: 2
         }),
-        frameRate: 15,
+        frameRate: 2,
         repeat: -1
     });
 
@@ -36,8 +37,9 @@ function PlayerAnimation(anims) {
             start: 0,
             end: 1
         }),
-        frameRate: 15,
-        repeat: -1
+        frameRate: 8,
+        repeat: 0,
+
     });
 }
 

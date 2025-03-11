@@ -7,8 +7,6 @@ let config = {
 
     physics: {
         default: 'arcade',
-
-
     },
 
     scene: [Boot, Scene1]

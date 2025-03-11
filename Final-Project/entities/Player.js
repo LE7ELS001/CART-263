@@ -14,9 +14,18 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     init() {
         this.gravity = 500;
-        this.playerSpeed = 190;
-        this.body.setGravityY(500);
+        this.playerSpeed = 150;
+
+        //jump
+        //Maxjump = 0 jump once 
+        //Maxjump = 1 double jump
+        this.jumpCount = 0;
+        this.maxJump = 1;
+
+        this.body.setGravityY(this.gravity);
         this.setScale(1.5);
+        this.setSize(20, 38);
+        this.setOffset(45, 42);
         this.setCollideWorldBounds(true);
 
         PlayerAnimation(this.scene.anims);
@@ -29,38 +38,55 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
+        const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(this.cursors.space);
 
         if (this.cursors.left.isDown) {
             this.setVelocityX(-this.playerSpeed);
+            this.setOffset(55, 42);
             this.flipX = true;
-
         }
         else if (this.cursors.right.isDown) {
             this.setVelocityX(this.playerSpeed);
+            this.setOffset(45, 42);
             this.flipX = false;
         }
         else {
             this.setVelocityX(0);
         }
 
-        if (this.cursors.up.isDown && this.body.touching.down) {
-            this.setVelocityY(-430);
-        }
-        else if (this.cursors.down.isDown) {
-            this.setVelocityY(100);
-        }
-        else {
-            this.setVelocityY(0);
+        if (isSpaceJustDown && (this.body.onFloor() || this.jumpCount < this.maxJump)) {
+
+            this.setVelocityY(-this.playerSpeed * 1.8);
+            this.jumpCount++;
+            console.log(this.jumpCount);
+
         }
 
-        if (this.body.velocity.x !== 0) {
 
-            this.play("run", true);
+        // if (this.body.onFloor()) {
+
+        //     this.jumpCount = 0;
+
+        // }
+
+        if (this.body.onFloor()) {
+            this.jumpCount = 0;
+            if (this.body.velocity.x !== 0) {
+                this.play("run", true);
+
+            }
+            else {
+                this.play("idle", true);
+            }
         }
-        // Otherwise it's not moving
+        else if (this.body.velocity.y > 0) {
+            this.play("fall", true);
+        }
         else {
-            this.play("idle", true);
+            this.play("jump", true);
+
         }
+
 
     }
 
