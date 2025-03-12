@@ -8,9 +8,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
+        Object.assign(this, CollisionMixin);
         this.init();
         this.initEvents();
+
+
     }
+
+
 
     init() {
         this.gravity = 500;
@@ -20,7 +25,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         //Maxjump = 0 jump once 
         //Maxjump = 1 double jump
         this.jumpCount = 0;
-        this.maxJump = 1;
+        this.maxJump = 0;
+        this.previousVelocityY = 0;
+        this.isJumpRequested = false;
 
         this.body.setGravityY(this.gravity);
         this.setScale(1.5);
@@ -57,17 +64,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         if (isSpaceJustDown && (this.body.onFloor() || this.jumpCount < this.maxJump)) {
 
             this.setVelocityY(-this.playerSpeed * 1.8);
+            this.isJumpRequested = true;
             this.jumpCount++;
-            console.log(this.jumpCount);
+            //console.log(this.jumpCount);
 
         }
 
 
-        // if (this.body.onFloor()) {
-
-        //     this.jumpCount = 0;
-
-        // }
 
         if (this.body.onFloor()) {
             this.jumpCount = 0;
@@ -79,18 +82,29 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this.play("idle", true);
             }
         }
-        else if (this.body.velocity.y > 0) {
-            this.play("fall", true);
-        }
         else {
-            this.play("jump", true);
+            if (this.isJumpRequested) {
+                this.play("jump", true);
+                this.isJumpRequested = false;
+            }
+            else if (this.previousVelocityY <= 0 && this.body.velocity.y > 0) {
 
+                this.play("jumpfall", true);
+            }
+            else if (this.body.velocity.y > 0) {
+
+                this.play("fall", true);
+            }
         }
 
+        this.previousVelocityY = this.body.velocity.y;
 
     }
 
-    handleInput() {
 
-    }
 }
+
+
+
+
+

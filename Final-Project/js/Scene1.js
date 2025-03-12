@@ -7,32 +7,30 @@ class Scene1 extends Phaser.Scene {
 
     create() {
 
-        //this.physics.world.gravity.y = 400;
-        //create player animation
+
+        //create map
         const map = this.createMap();
 
-        //test floor
+        //create layers
         const layers = this.createLayers(map);
 
 
-        //player 
+        // create player 
         const player = this.createPlayer();
 
 
+        //set collider
+        player.addCollider(layers.platformCollider, (player, platorm) => {
+            //console.log("hit the platformCollider");
+        });
 
-        //play animation
-        //player.play("idle");
-
-
-
-        //set collision 
-        this.physics.add.collider(player, layers.platformCollider);
-
-
+        //debug
         this.physics.world.createDebugGraphic();
 
-        //create keyboard input 
-        this.cursors = this.input.keyboard.createCursorKeys();
+        //camera 
+        this.setupFollowupCameraOn(player);
+
+
 
     }
 
@@ -68,7 +66,13 @@ class Scene1 extends Phaser.Scene {
         return player;
     }
 
-
+    setupFollowupCameraOn(player) {
+        const gameConfig = this.registry.get("gameConfig");
+        const { height, width, mapOffset, ZoomFactor } = gameConfig;
+        this.physics.world.setBounds(0, 0, width + mapOffset, height + 200);
+        this.cameras.main.setBounds(0, 0, width + mapOffset, height + 200).setZoom(ZoomFactor);
+        this.cameras.main.startFollow(player);
+    }
 
 
 }

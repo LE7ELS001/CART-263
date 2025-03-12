@@ -7,14 +7,26 @@
     <title>Final project</title>
 
     <script src="js/phaser.js"></script>
+    <style>
+        #game-container {
+            max-width: 1280px;
+            max-height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 </head>
 
 <body>
     <script src="entities/PlayerAnims.js"></script>
     <script src="entities/Player.js"></script>
+    <script src="mixins/collidable.js"></script>
     <script src="js/Boot.js"></script>
     <script src="js/Scene1.js"></script>
     <script src="js/main.js"></script>
+
+    <div id="game-container"></div>
 
 </body>
 

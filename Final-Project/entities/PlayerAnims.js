@@ -27,7 +27,7 @@ function PlayerAnimation(anims) {
             start: 0,
             end: 2
         }),
-        frameRate: 2,
+        frameRate: 12,
         repeat: -1
     });
 
@@ -35,10 +35,23 @@ function PlayerAnimation(anims) {
         key: "fall",
         frames: anims.generateFrameNumbers("avatar-fall", {
             start: 0,
+            end: 2
+        }),
+        frameRate: 12,
+        repeat: -1,
+
+
+    });
+
+    anims.create({
+        key: "jumpfall",
+        frames: anims.generateFrameNumbers("avatar-Jumpfall", {
+            start: 0,
             end: 1
         }),
-        frameRate: 8,
+        frameRate: 10,
         repeat: 0,
+        //stopOnLastFrame: true
 
     });
 }

@@ -35,6 +35,13 @@ class Boot extends Phaser.Scene {
             frameWidth: 120,
             frameHeight: 80,
             spacing: 0,
+            endFrame: 2
+        });
+
+        this.load.spritesheet("avatar-Jumpfall", "Assets/Character/Player/_JumpFall.png", {
+            frameWidth: 120,
+            frameHeight: 80,
+            spacing: 0,
             endFrame: 1
         });
 
