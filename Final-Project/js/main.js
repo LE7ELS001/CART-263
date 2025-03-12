@@ -1,6 +1,6 @@
 "use strict"
 
-const MAP_WIDTH = 1600;
+const MAP_WIDTH = 1920;
 const WIDTH = document.body.offsetWidth;
 const HEIGHT = 600;
 
