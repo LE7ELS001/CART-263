@@ -259,6 +259,41 @@
         }, 
         {
          "draworder":"topdown",
+         "id":7,
+         "name":"Enemy_spawns",
+         "objects":[
+                {
+                 "height":0,
+                 "id":3,
+                 "name":"Spawn",
+                 "point":true,
+                 "rotation":0,
+                 "type":"Boar",
+                 "visible":true,
+                 "width":0,
+                 "x":316.666666666667,
+                 "y":528
+                }, 
+                {
+                 "height":0,
+                 "id":5,
+                 "name":"Spawn",
+                 "point":true,
+                 "rotation":0,
+                 "type":"Boar",
+                 "visible":true,
+                 "width":0,
+                 "x":602,
+                 "y":394
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":6,
          "name":"Player_zones",
          "objects":[
@@ -292,8 +327,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":7,
- "nextobjectid":3,
+ "nextlayerid":8,
+ "nextobjectid":6,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

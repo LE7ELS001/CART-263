@@ -23,19 +23,33 @@ class Scene1 extends Phaser.Scene {
         // create an end zone 
         this.createEndOfLevel(playerZones.end, player);
 
+        //create Boards
+        const boarsNormal = this.createEnemies(layers.enemySpawns);
+        boarsNormal.forEach(boar => {
+            boar.play("boarIdle", true);
+        });
+        //boarsNormal.play("boarIdle", true);
+
+
         //set player collider
         player.addCollider(layers.platformCollider, (player, platorm) => {
             //console.log("hit the platformCollider");
         });
 
 
-        //create enemy 
-        const enemy = this.createEnemy();
+        //set enemy collider
+        boarsNormal.forEach(boar => {
+            player.addCollider(boar, (player, boarNormal) => {
 
-        //set enemy collider 
-        enemy.addCollider(layers.platformCollider, (enemy, platform) => {
-            console.log('enemy hit the platformCollider');
+            })
+            boar.addCollider(layers.platformCollider, (boar, platform) => {
+
+            })
         })
+
+
+
+
 
         //debug
         this.physics.world.createDebugGraphic();
@@ -66,11 +80,12 @@ class Scene1 extends Phaser.Scene {
         const platforms2 = map.createLayer('Platforms2', tileset);
         const environment = map.createLayer('Environment', tileset);
         const playerZones = map.getObjectLayer('Player_zones');
+        const enemySpawns = map.getObjectLayer('Enemy_spawns')
 
         platformCollider.setCollisionByExclusion(-1, true);
 
 
-        return { tree, platforms, platforms2, environment, platformCollider, playerZones };
+        return { tree, platforms, platforms2, environment, platformCollider, playerZones, enemySpawns };
     }
 
     createPlayer(start) {
@@ -80,9 +95,14 @@ class Scene1 extends Phaser.Scene {
         return player;
     }
 
-    createEnemy() {
-        const boar = new Boar(this, 200, 400);
-        return boar;
+    createEnemies(spawnLayer) {
+        const enemyTypes = getEnemyTypes();
+        return spawnLayer.objects.map(spawnPoint => {
+            return new enemyTypes[spawnPoint.type](this, spawnPoint.x, spawnPoint.y);
+
+        })
+        //return new Boar(this, 200, 400);
+
     }
 
     setupFollowupCameraOn(player) {

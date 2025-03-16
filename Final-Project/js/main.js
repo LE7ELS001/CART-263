@@ -16,6 +16,8 @@ let config = {
         default: 'arcade',
     },
 
+
+
     scene: [Boot, Scene1]
 }
 
