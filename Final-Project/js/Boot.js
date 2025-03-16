@@ -45,6 +45,33 @@ class Boot extends Phaser.Scene {
             endFrame: 1
         });
 
+        /**
+         * Load enemy
+         */
+
+        //Boar
+        this.load.spritesheet("Boar-idle", "Assets/enemy/Boar_normal/Idle-Sheet.png", {
+            frameWidth: 48,
+            frameHeight: 32,
+            spacing: 0,
+            endFrame: 3
+        });
+
+        this.load.spritesheet("Boar-walk", "Assets/enemy/Boar_normal/Walk-Base-Sheet.png", {
+            frameWidth: 48,
+            frameHeight: 32,
+            spacing: 0,
+            endFrame: 5
+        });
+
+        this.load.spritesheet("Boar-run", "Assets/enemy/Boar_normal/Run-Sheet.png", {
+            frameWidth: 48,
+            frameHeight: 32,
+            spacing: 0,
+            endFrame: 5
+        });
+
+
         //load map tile
         this.load.tilemapTiledJSON('testMap', "Assets/Map/TestMap.json");
         this.load.image('tiles-1', 'Assets/Tiles/ForestTiles.png');
@@ -59,6 +86,7 @@ class Boot extends Phaser.Scene {
     }
 
     create() {
+
 
     }
 

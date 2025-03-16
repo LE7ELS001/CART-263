@@ -1,15 +1,16 @@
 "use strict"
 
 const MAP_WIDTH = 1920;
-const WIDTH = document.body.offsetWidth;
+// const WIDTH = document.body.offsetWidth;
+const WIDTH = 800;
 const HEIGHT = 600;
 
 let config = {
     type: Phaser.AUTO,
     mapOffset: MAP_WIDTH > WIDTH ? MAP_WIDTH - WIDTH : 0,
+    ZoomFactor: 1.5,
     width: 800,
     height: HEIGHT,
-    ZoomFactor: 1.5,
     parent: 'game-container',
     physics: {
         default: 'arcade',
@@ -25,3 +26,4 @@ game.registry.set("gameConfig", {
     height: config.height,
     ZoomFactor: config.ZoomFactor
 });
+
