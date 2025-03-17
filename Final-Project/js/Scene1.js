@@ -109,7 +109,7 @@ class Scene1 extends Phaser.Scene {
         const gameConfig = this.registry.get("gameConfig");
         const { height, width, mapOffset, ZoomFactor } = gameConfig;
         this.physics.world.setBounds(0, 0, width + mapOffset, height + 200);
-        this.cameras.main.setBounds(0, 0, width + mapOffset, height + 200).setZoom(ZoomFactor);
+        this.cameras.main.setBounds(0, 0, width + mapOffset, height + 50).setZoom(ZoomFactor);
         console.log(mapOffset);
         this.cameras.main.startFollow(player);
     }
