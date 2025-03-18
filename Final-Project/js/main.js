@@ -13,8 +13,11 @@ let config = {
     height: HEIGHT,
     parent: 'game-container',
     physics: {
+        debug: true,
         default: 'arcade',
     },
+
+
 
 
 

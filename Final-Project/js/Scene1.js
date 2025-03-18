@@ -7,7 +7,7 @@ class Scene1 extends Phaser.Scene {
 
     create() {
 
-        this.drawLineOrNo = false;
+
 
         //create map
         const map = this.createMap();
@@ -25,7 +25,7 @@ class Scene1 extends Phaser.Scene {
         this.createEndOfLevel(playerZones.end, player);
 
         //create Boards
-        const enemies = this.createEnemies(layers.enemySpawns);
+        const enemies = this.createEnemies(layers.enemySpawns, layers.platformCollider);
 
 
 
@@ -44,7 +44,10 @@ class Scene1 extends Phaser.Scene {
             enemy.addCollider(layers.platformCollider, (enemy, platform) => {
 
             })
+
+
         })
+
 
 
 
@@ -57,73 +60,39 @@ class Scene1 extends Phaser.Scene {
         //camera 
         this.setupFollowupCameraOn(player);
 
-        //light casting 
-        this.graphics = this.add.graphics();
-        this.line = new Phaser.Geom.Line();
-        this.graphics.lineStyle(1, 0x00ff00);
 
-        this.input.on('pointerdown', this.startDrawing, this);
+
         this.input.on('pointerup', pointer => this.finishDrawing(pointer, layers.platforms), this)
 
 
     }
 
-    drawDebug(layer) {
-        const CollideingTileColor = new Phaser.Display.Color(250, 150, 50);
-        layer.renderDebug(this.graphics, {
-            tileColor: null,
-            CollideingTileColor
-        })
-        this.graphics.alpha = 0.5;
-    }
-
-    startDrawing(pointer) {
-        if (this.tileHits && this.tileHits.length > 0) {
-            this.tileHits.forEach(tile => {
-                if (tile.index !== -1) {
-                    tile.setCollision(false);
-                }
-            })
-        }
-
-        this.drawLineOrNo = true;
-        this.line.x1 = pointer.worldX;
-        this.line.y1 = pointer.worldY;
-
-    }
-
-    finishDrawing(pointer, layer) {
-        this.line.x2 = pointer.worldX;
-        this.line.y2 = pointer.worldY;
-        this.graphics.clear();
-        this.graphics.strokeLineShape(this.line);
-
-        this.tileHits = layer.getTilesWithinShape(this.line);
-        if (this.tileHits.length > 0) {
-            this.tileHits.forEach(tile => {
-                if (tile.index !== -1) {
-                    tile.setCollision(true);
-                }
-            })
-        }
-
-        this.drawDebug(layer);
-        this.drawLineOrNo = false;
 
 
-    }
 
-    update() {
-        if (this.drawLineOrNo) {
 
-            const pointer = this.input.activePointer;
+    // finishDrawing(pointer, layer) {
+    //     this.line.x2 = pointer.worldX;
+    //     this.line.y2 = pointer.worldY;
+    //     this.graphics.clear();
+    //     this.graphics.strokeLineShape(this.line);
 
-            this.line.x2 = pointer.worldX
-            this.line.y2 = pointer.worldY
-            this.graphics.clear();
-            this.graphics.strokeLineShape(this.line);
-        }
-    }
+    //     this.tileHits = layer.getTilesWithinShape(this.line);
+    //     if (this.tileHits.length > 0) {
+    //         this.tileHits.forEach(tile => {
+    //             if (tile.index !== -1) {
+    //                 tile.setCollision(true);
+    //             }
+    //         })
+    //     }
+
+    //     this.drawDebug(layer);
+    //     this.drawLineOrNo = false;
+
+
+    // }
+
+
 
     createMap() {
         const map = this.make.tilemap({ key: "testMap" });
@@ -155,11 +124,12 @@ class Scene1 extends Phaser.Scene {
         return player;
     }
 
-    createEnemies(spawnLayer) {
+    createEnemies(enemiesSpawnPoint, platformColliders) {
         const enemies = new Enemies();
         const enemyTypes = getEnemyTypes();
-        spawnLayer.objects.forEach(spawnPoint => {
+        enemiesSpawnPoint.objects.forEach(spawnPoint => {
             const enemy = new enemyTypes[spawnPoint.type](this, spawnPoint.x, spawnPoint.y);
+            enemy.setPlatformColliders(platformColliders);
             enemies.add(enemy);
         });
         return enemies;
