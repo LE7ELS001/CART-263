@@ -113,6 +113,9 @@ function textColor(text) {
 
   for (let i = 0; i < wordsLength; i++) {
     let coloredWord = `<span style="color: ${randomColor()}">${words[i]}</span>`;
+    if (i % 2 === 0) {
+      coloredWord = `<span style="color: ${randomColor()}; background-color: ${randomColor()}">${words[i]}</span>`;
+    }
     colorWordArray.push(coloredWord);
   }
 
