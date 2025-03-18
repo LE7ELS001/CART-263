@@ -79,6 +79,8 @@ class Boot extends Phaser.Scene {
 
         this.load.image("Test-tile", "Assets/Tiles/Forest/Tiles.png");
 
+        this.load.image("forest-bg", "Assets/Map/background forest.png");
+
 
         this.load.on('complete', () => {
             this.scene.start('scene1');
