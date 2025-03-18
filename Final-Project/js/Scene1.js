@@ -24,11 +24,9 @@ class Scene1 extends Phaser.Scene {
         this.createEndOfLevel(playerZones.end, player);
 
         //create Boards
-        const boarsNormal = this.createEnemies(layers.enemySpawns);
-        boarsNormal.forEach(boar => {
-            boar.play("boarIdle", true);
-        });
-        //boarsNormal.play("boarIdle", true);
+        const enemies = this.createEnemies(layers.enemySpawns);
+
+
 
 
         //set player collider
@@ -37,15 +35,16 @@ class Scene1 extends Phaser.Scene {
         });
 
 
-        //set enemy collider
-        boarsNormal.forEach(boar => {
-            player.addCollider(boar, (player, boarNormal) => {
+        // set enemy collider
+        enemies.getChildren().forEach(enemy => {
+            player.addCollider(enemy, (player, enemy) => {
 
             })
-            boar.addCollider(layers.platformCollider, (boar, platform) => {
+            enemy.addCollider(layers.platformCollider, (enemy, platform) => {
 
             })
         })
+
 
 
 
@@ -57,8 +56,27 @@ class Scene1 extends Phaser.Scene {
         //camera 
         this.setupFollowupCameraOn(player);
 
+        //light casting 
+        this.graphics = this.add.graphics();
+        this.line = new Phaser.Geom.Line();
+        this.graphics.lineStyle(1, 0x00ff00);
+
+        this.input.on('pointerdown', this.startDrawing, this);
+        this.input.on('pointerup', this.finishDrawing, this)
 
 
+    }
+
+    startDrawing(pointer) {
+        this.line.x1 = pointer.worldX;
+        this.line.y1 = pointer.worldY;
+
+    }
+
+    finishDrawing(pointer) {
+        this.line.x2 = pointer.worldX;
+        this.line.y2 = pointer.worldY;
+        this.graphics.strokeLineShape(this.line);
     }
 
     update() {
@@ -96,13 +114,13 @@ class Scene1 extends Phaser.Scene {
     }
 
     createEnemies(spawnLayer) {
+        const enemies = new Enemies();
         const enemyTypes = getEnemyTypes();
-        return spawnLayer.objects.map(spawnPoint => {
-            return new enemyTypes[spawnPoint.type](this, spawnPoint.x, spawnPoint.y);
-
-        })
-        //return new Boar(this, 200, 400);
-
+        spawnLayer.objects.forEach(spawnPoint => {
+            const enemy = new enemyTypes[spawnPoint.type](this, spawnPoint.x, spawnPoint.y);
+            enemies.add(enemy);
+        });
+        return enemies;
     }
 
     setupFollowupCameraOn(player) {

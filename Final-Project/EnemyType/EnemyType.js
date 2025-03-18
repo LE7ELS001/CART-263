@@ -3,3 +3,5 @@ function getEnemyTypes() {
         Boar: Boar
     };
 }
+
+window.getEnemyTypes = getEnemyTypes;

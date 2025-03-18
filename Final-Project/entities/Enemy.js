@@ -10,6 +10,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         Object.assign(this, CollisionMixin);
         this.init();
+        this.initEvents();
 
 
 
@@ -34,6 +35,15 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         BoarAnims(this.scene.anims);
 
     }
+
+    initEvents() {
+        this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
+    }
+
+    update(time, delta) {
+
+    }
+
 }
 
 
