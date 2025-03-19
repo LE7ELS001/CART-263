@@ -22,7 +22,7 @@ function PlayerAnimation(anims) {
 
     anims.create({
         key: "attack1",
-        frames: anims.generateFrameNumbers("attack1", { start: 0, end: 3 }),
+        frames: anims.generateFrameNumbers("attack1", { start: 0, end: 5 }),
         frameRate: 12,
         repeat: 0
     });
@@ -36,11 +36,11 @@ function PlayerAnimation(anims) {
 
     anims.create({
         key: "roll",
-        frames: anims.generateFrameNumbers("roll", { start: 0, end: 11 }),
-        frameRate: 15,
+        frames: anims.generateFrameNumbers("roll", { start: 0, end: 12 }), 
+        frameRate: 12,  
         repeat: 0
     });
-
+    
 
     anims.create({
         key: "jump",
