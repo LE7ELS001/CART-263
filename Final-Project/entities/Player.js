@@ -12,6 +12,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.init();
         this.initEvents();
 
+        // attack key
+        this.attackKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
+        this.isAttacking = false;
+        this.comboStep = 0;  // follow current attack level
+        this.comboTimer = null;
+
+        //roll key
+        this.rollKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        this.isRolling = false;
+
 
     }
 
@@ -25,7 +35,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         //Maxjump = 0 jump once 
         //Maxjump = 1 double jump
         this.jumpCount = 0;
-        this.maxJump = 0;
+        this.maxJump = 1;
         this.previousVelocityY = 0;
         this.isJumpRequested = false;
 
@@ -45,7 +55,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
     }
 
+
     update(time, delta) {
+
+        if (this.isAttacking || this.isRolling) return;
+
         const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(this.cursors.space);
 
         if (this.cursors.left.isDown) {
@@ -98,8 +112,82 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             }
         }
 
+        if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
+            this.attack();
+        }
+
+        if (Phaser.Input.Keyboard.JustDown(this.rollKey)) {
+            this.roll();
+        }
+
+
+
         this.previousVelocityY = this.body.velocity.y;
 
+    }
+
+
+    attack() {
+        if (this.isAttacking) return;
+        this.isAttacking = true;
+
+        this.setVelocityX(0);  // stop moving
+        let attackAnim = "";
+
+        // select attack animation
+        if (this.comboStep === 0) {
+            attackAnim = "attack1";
+        } else if (this.comboStep === 1) {
+            attackAnim = "attack2";
+        }
+
+        this.play(attackAnim, true);
+
+        // End of the animation and allow the next combo
+        this.once("animationcomplete", () => {
+            this.isAttacking = false;
+            this.comboStep++;
+
+            // If the player does not press the attack button within 0.2 seconds, the combo is reset
+            if (this.comboTimer) {
+                this.comboTimer.remove();
+            }
+            this.comboTimer = this.scene.time.delayedCall(200, () => {
+                this.comboStep = 0;
+            });
+        });
+    }
+
+    roll() {
+        if (this.isRolling || this.isAttacking) return;
+        this.isRolling = true;
+
+        this.setVelocityX(this.flipX ? -200 : 200);
+        this.anims.play("roll", true);
+
+
+        this.body.checkCollision.left = false;
+        this.body.checkCollision.right = false;
+        this.body.checkCollision.up = false;
+
+        this.setAlpha(0.7);
+
+        this.once("animationcomplete", () => {
+            this.isRolling = false;
+
+
+            this.body.checkCollision.left = true;
+            this.body.checkCollision.right = true;
+            this.body.checkCollision.up = true;
+
+            this.setAlpha(1);
+
+            if (this.body.velocity.x !== 0) {
+                this.anims.play("run", true);
+            } else {
+                this.anims.play("idle", true);
+            }
+        });
     }
 
 
