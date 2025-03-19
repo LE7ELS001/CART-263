@@ -22,7 +22,7 @@ function PlayerAnimation(anims) {
 
     anims.create({
         key: "attack1",
-        frames: anims.generateFrameNumbers("attack1", { start: 0, end: 5 }),
+        frames: anims.generateFrameNumbers("attack1", { start: 0, end: 3 }),
         frameRate: 12,
         repeat: 0
     });
@@ -36,11 +36,11 @@ function PlayerAnimation(anims) {
 
     anims.create({
         key: "roll",
-        frames: anims.generateFrameNumbers("roll", { start: 0, end: 12 }), 
-        frameRate: 12,  
+        frames: anims.generateFrameNumbers("roll", { start: 0, end: 11 }),
+        frameRate: 12,
         repeat: 0
     });
-    
+
 
     anims.create({
         key: "jump",
@@ -75,6 +75,16 @@ function PlayerAnimation(anims) {
         //stopOnLastFrame: true
 
     });
+
+    anims.create({
+        key: "wallslide",
+        frames: anims.generateFrameNumbers("avatar-wallslide", {
+            start: 0,
+            end: 2
+        }),
+        frameRate: 10,
+        repeat: -1
+    })
 }
 
 

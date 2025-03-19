@@ -46,6 +46,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.setCollideWorldBounds(true);
         this.setOrigin(0.5, 1);
 
+
         PlayerAnimation(this.scene.anims);
 
         this.cursors = this.scene.input.keyboard.createCursorKeys();
@@ -55,22 +56,35 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
     }
 
-    
+
     update(time, delta) {
 
+
         if (this.isAttacking || this.isRolling) return;
+
+        if (this.isWallSliding) {
+            this.body.setGravityY(this.gravity * 0.9);
+        }
+        else {
+            this.body.setGravityY(this.gravity);
+        }
 
         const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(this.cursors.space);
 
         if (this.cursors.left.isDown) {
-            this.setVelocityX(-this.playerSpeed);
-            this.setOffset(55, 42);
-            this.flipX = true;
+            if (!this.isWallSliding) {
+
+                this.setVelocityX(-this.playerSpeed);
+                this.setOffset(55, 42);
+                this.flipX = true;
+            }
         }
         else if (this.cursors.right.isDown) {
-            this.setVelocityX(this.playerSpeed);
-            this.setOffset(45, 42);
-            this.flipX = false;
+            if (!this.isWallSliding) {
+                this.setVelocityX(this.playerSpeed);
+                this.setOffset(45, 42);
+                this.flipX = false;
+            }
         }
         else {
             this.setVelocityX(0);
@@ -119,8 +133,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         if (Phaser.Input.Keyboard.JustDown(this.rollKey)) {
             this.roll();
         }
-        
-        
+
+
 
         this.previousVelocityY = this.body.velocity.y;
 
@@ -139,7 +153,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             attackAnim = "attack1";
         } else if (this.comboStep === 1) {
             attackAnim = "attack2";
-        } 
+        }
 
         this.play(attackAnim, true);
 
@@ -160,30 +174,30 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     roll() {
 
-        if (this.isRolling || this.isAttacking || this.rollCooldown) return; 
+        if (this.isRolling || this.isAttacking || this.rollCooldown) return;
         this.isRolling = true;
-        this.rollCooldown = true; 
-    
-        this.setVelocityX(this.flipX ? -200 : 200); 
-        this.anims.play("roll", true);  
-    
-        
+        this.rollCooldown = true;
+
+        this.setVelocityX(this.flipX ? -200 : 200);
+        this.anims.play("roll", true);
+
+
         this.body.checkCollision.left = false;
         this.body.checkCollision.right = false;
         this.body.checkCollision.up = false;
-    
-        this.setAlpha(0.7); 
-    
+
+        this.setAlpha(0.7);
+
         this.once("animationcomplete", () => {
             this.isRolling = false;
-    
-            
+
+
             this.body.checkCollision.left = true;
             this.body.checkCollision.right = true;
             this.body.checkCollision.up = true;
-    
-            this.setAlpha(1); 
-    
+
+            this.setAlpha(1);
+
             if (this.body.velocity.x !== 0) {
                 this.anims.play("run", true);
             } else {
@@ -195,8 +209,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             });
         });
     }
-    
-    
+
+
+
+
 }
 
 

@@ -38,7 +38,6 @@ class Scene1 extends Phaser.Scene {
 
         //set player collider
         player.addCollider(layers.platformCollider, (player, platorm) => {
-            //console.log("hit the platformCollider");
         });
 
 
@@ -62,6 +61,7 @@ class Scene1 extends Phaser.Scene {
 
         //debug
         this.physics.world.createDebugGraphic();
+
 
         //camera 
         this.setupFollowupCameraOn(player);
