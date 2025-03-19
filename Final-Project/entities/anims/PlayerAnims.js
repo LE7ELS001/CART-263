@@ -20,6 +20,19 @@ function PlayerAnimation(anims) {
         repeat: -1
     });
 
+    anims.create({
+        key: "attack1",
+        frames: anims.generateFrameNumbers("attack1", { start: 0, end: 5 }),
+        frameRate: 12,
+        repeat: 0
+    });
+
+    anims.create({
+        key: "attack2",
+        frames: anims.generateFrameNumbers("attack2", { start: 0, end: 5 }),
+        frameRate: 12,
+        repeat: 0
+    });
 
     anims.create({
         key: "jump",
