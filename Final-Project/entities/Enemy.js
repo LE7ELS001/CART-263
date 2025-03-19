@@ -25,6 +25,8 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.attack = 20;
         this.scale = 1.5;
         this.resetTimeAfterTurn = 0;
+        this.maxMoveDistance = 100;
+        this.currentDistance = 0;
         this.platformColliders = null;
         this.rayGraphics = this.scene.add.graphics({ lineStyle: { width: 2, color: 0xaa00aa } });
 
@@ -46,17 +48,27 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
     }
 
-    update(time, delta) {
-        const { ray, hitTheLayer } = this.raycast(this.body, this.platformColliders, 30, 1);
+    update(time) {
+        this.patrol(time);
 
-        if (!hitTheLayer && this.resetTimeAfterTurn + 100 < time) {
+
+    }
+
+    patrol(time) {
+        if (!this.body || !this.body.onFloor()) {
+            return;
+        }
+
+        this.currentDistance += Math.abs(this.body.deltaX());
+        const { ray, hitTheLayer } = this.raycast(this.body, this.platformColliders, { rayLength: 30, precision: 1, steepnes: 0.5 });
+
+        if ((!hitTheLayer || this.currentDistance >= this.maxMoveDistance) &&
+            this.resetTimeAfterTurn + 100 < time) {
             this.setFlipX(this.Speed < 0);
             console.log
             this.setVelocityX(this.Speed = -this.Speed);
             this.resetTimeAfterTurn = time;
-
-
-
+            this.currentDistance = 0;
         }
 
         this.rayGraphics.clear();
@@ -64,7 +76,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.rayGraphics.strokeLineShape(ray.edgeLine);
         this.rayGraphics.lineStyle(2, 0x0000ff);
         this.rayGraphics.strokeLineShape(ray.wallLine);
-
     }
 
     setPlatformColliders(platformColliders) {

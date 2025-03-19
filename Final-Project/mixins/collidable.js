@@ -7,7 +7,7 @@ const CollisionMixin = {
     prevRay: null,
     prevHasHit: null,
 
-    raycast(body, layer, rayLength = 30, precision = 0) {
+    raycast(body, layer, { rayLength = 30, precision = 0, steepnes = 1 }) {
         const { x, y, width, halfHeight } = body;
 
         this.bodyPositionDifferenceX += body.x - body.prev.x;
@@ -30,7 +30,7 @@ const CollisionMixin = {
             case Phaser.Physics.Arcade.FACING_RIGHT: {
                 edgeLine.x1 = x + width;
                 edgeLine.y1 = y + halfHeight;
-                edgeLine.x2 = edgeLine.x1 + rayLength;
+                edgeLine.x2 = edgeLine.x1 + rayLength * steepnes;
                 edgeLine.y2 = edgeLine.y1 + rayLength;
 
                 wallLine.x1 = x + width;
@@ -42,7 +42,7 @@ const CollisionMixin = {
             case Phaser.Physics.Arcade.FACING_LEFT: {
                 edgeLine.x1 = x;
                 edgeLine.y1 = y + halfHeight;
-                edgeLine.x2 = edgeLine.x1 - rayLength;
+                edgeLine.x2 = edgeLine.x1 - rayLength * steepnes;
                 edgeLine.y2 = edgeLine.y1 + rayLength;
 
                 wallLine.x1 = x;
