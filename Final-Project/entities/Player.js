@@ -78,7 +78,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         if (isSpaceJustDown && (this.body.onFloor() || this.jumpCount < this.maxJump)) {
 
-            this.setVelocityY(-this.playerSpeed * 1.8);
+            this.setVelocityY(-this.playerSpeed * 2);
             this.isJumpRequested = true;
             this.jumpCount++;
             //console.log(this.jumpCount);
