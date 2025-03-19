@@ -20,21 +20,24 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     init() {
         this.gravity = 500;
-        this.Speed = 150;
+        this.Speed = 75;
         this.health = 100;
         this.attack = 20;
+        this.scale = 1.5;
+        this.resetTimeAfterTurn = 0;
         this.platformColliders = null;
-
         this.rayGraphics = this.scene.add.graphics({ lineStyle: { width: 2, color: 0xaa00aa } });
 
         this.body.setGravityY(this.gravity);
-        this.setScale(1.5);
+        this.setScale(this.scale);
+        // this.setSize(27, 27);
+        // this.setOffset(7, 6);
         this.setSize(27, 27);
-        this.setOffset(7, 6);
+        this.setOffset(13, 6);
         this.setCollideWorldBounds(true);
         this.setImmovable(true);
         this.setOrigin(0.5, 1);
-
+        this.setVelocityX(-this.Speed);
         BoarAnims(this.scene.anims);
 
     }
@@ -44,40 +47,30 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
-        const { ray, hitTheLayer } = this.raycast(this.body, this.platformColliders);
+        const { ray, hitTheLayer } = this.raycast(this.body, this.platformColliders, 30, 1);
 
-        if (hitTheLayer) {
-            console.log('hit the platform')
+        if (!hitTheLayer && this.resetTimeAfterTurn + 100 < time) {
+            this.setFlipX(this.Speed < 0);
+            console.log
+            this.setVelocityX(this.Speed = -this.Speed);
+            this.resetTimeAfterTurn = time;
+
+
+
         }
 
         this.rayGraphics.clear();
-        this.rayGraphics.strokeLineShape(ray);
+        this.rayGraphics.lineStyle(2, 0xff0000);
+        this.rayGraphics.strokeLineShape(ray.edgeLine);
+        this.rayGraphics.lineStyle(2, 0x0000ff);
+        this.rayGraphics.strokeLineShape(ray.wallLine);
+
     }
 
     setPlatformColliders(platformColliders) {
         this.platformColliders = platformColliders;
     }
-    raycast(body, layer, rayLength = 30) {
-        const { x, y, width, halfHeight } = body;
-        const line = new Phaser.Geom.Line();
-        const isFacingLeft = !(this.flipX)
-        let hitTheLayer = false;
 
-        line.x1 = isFacingLeft ? x : x + width;
-        line.y1 = y + halfHeight;
-        line.x2 = isFacingLeft ? line.x1 - rayLength : line.x1 + rayLength;
-        line.y2 = line.y1 + rayLength;
-
-        const hits = layer.getTilesWithinShape(line);
-        if (hits.length > 0) {
-            // hit at least one colliable platform 
-            hitTheLayer = hits.some(hit => hit.index !== -1);
-        }
-
-        return { ray: line, hitTheLayer };
-
-
-    }
 
 
 }

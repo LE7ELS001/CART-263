@@ -62,7 +62,7 @@ class Scene1 extends Phaser.Scene {
 
 
 
-        this.input.on('pointerup', pointer => this.finishDrawing(pointer, layers.platforms), this)
+        // this.input.on('pointerup', pointer => this.finishDrawing(pointer, layers.platforms), this)
 
 
     }
