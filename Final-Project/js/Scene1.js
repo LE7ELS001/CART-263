@@ -9,9 +9,9 @@ class Scene1 extends Phaser.Scene {
 
         //creat background
         this.background = this.add.image(0, 0, "forest-bg")
-        .setOrigin(0, 0)
-        .setDepth(-1)
-        .setScrollFactor(0); // fix the background
+            .setOrigin(0, 0)
+            .setDepth(-1)
+            .setScrollFactor(0); // fix the background
 
 
 
