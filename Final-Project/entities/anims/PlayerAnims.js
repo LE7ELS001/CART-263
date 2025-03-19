@@ -23,21 +23,21 @@ function PlayerAnimation(anims) {
     anims.create({
         key: "attack1",
         frames: anims.generateFrameNumbers("attack1", { start: 0, end: 3 }),
-        frameRate: 12,
+        frameRate: 15,
         repeat: 0
     });
 
     anims.create({
         key: "attack2",
         frames: anims.generateFrameNumbers("attack2", { start: 0, end: 5 }),
-        frameRate: 12,
+        frameRate: 15,
         repeat: 0
     });
 
     anims.create({
         key: "roll",
         frames: anims.generateFrameNumbers("roll", { start: 0, end: 11 }),
-        frameRate: 12,
+        frameRate: 22,
         repeat: 0
     });
 
@@ -83,6 +83,13 @@ function PlayerAnimation(anims) {
             end: 2
         }),
         frameRate: 10,
+        repeat: -1
+    })
+
+    anims.create({
+        key: "takesHit",
+        frames: [{ key: 'avatar-takesHit', frame: 0 }],
+        frameRate: 1,
         repeat: -1
     })
 }

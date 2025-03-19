@@ -71,6 +71,8 @@ class Boot extends Phaser.Scene {
             endFrame: 2
         });
 
+        this.load.image("avatar-takesHit", "Assets/Character/Player/_Hit.png");
+
         /**
          * Load enemy
          */

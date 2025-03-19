@@ -12,15 +12,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.init();
         this.initEvents();
 
-        // attack key
-        this.attackKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
-        this.isAttacking = false;
-        this.comboStep = 0;  // follow current attack level
-        this.comboTimer = null;
-
-        //roll key
-        this.rollKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
-        this.isRolling = false;
 
 
     }
@@ -28,6 +19,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
 
     init() {
+
+        //player properties
         this.gravity = 500;
         this.playerSpeed = 150;
 
@@ -39,6 +32,24 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.previousVelocityY = 0;
         this.isJumpRequested = false;
 
+        // attack key
+        this.attackKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
+        this.isAttacking = false;
+        this.comboStep = 0;  // follow current attack level
+        this.comboTimer = null;
+
+        //roll key
+        this.rollKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        this.isRolling = false;
+
+
+        //hit 
+        this.hasBeenHit = false;
+        this.bounceVelocity = 120;
+
+
+
+        //player physics
         this.body.setGravityY(this.gravity);
         this.setScale(1.5);
         this.setSize(20, 38);
@@ -58,37 +69,53 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
 
     update(time, delta) {
+        if (this.hasBeenHit) { return; }
 
-
-        if (this.isAttacking || this.isRolling) return;
-
-        if (this.isWallSliding) {
-            this.body.setGravityY(this.gravity * 0.9);
-        }
-        else {
-            this.body.setGravityY(this.gravity);
+        if (this.isAttacking || this.isRolling) {
+            return;
         }
 
+
+
+
+
+        this.handleNormalMovement();
+        this.handleAnimation();
+        this.handleJump();
+
+
+
+
+
+        // if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
+        //     this.attack();
+        // }
+
+        if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
+            if (this.body.onFloor()) {
+                console.log("attack");
+                this.attack();
+            }
+            else {
+                console.log("attack on air");
+                this.attackOnAir();
+            }
+        }
+
+        if (Phaser.Input.Keyboard.JustDown(this.rollKey)) {
+            this.roll();
+        }
+
+
+
+        this.previousVelocityY = this.body.velocity.y;
+
+    }
+
+
+
+    handleJump() {
         const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(this.cursors.space);
-
-        if (this.cursors.left.isDown) {
-            if (!this.isWallSliding) {
-
-                this.setVelocityX(-this.playerSpeed);
-                this.setOffset(55, 42);
-                this.flipX = true;
-            }
-        }
-        else if (this.cursors.right.isDown) {
-            if (!this.isWallSliding) {
-                this.setVelocityX(this.playerSpeed);
-                this.setOffset(45, 42);
-                this.flipX = false;
-            }
-        }
-        else {
-            this.setVelocityX(0);
-        }
 
         if (isSpaceJustDown && (this.body.onFloor() || this.jumpCount < this.maxJump)) {
 
@@ -98,9 +125,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             //console.log(this.jumpCount);
 
         }
+    }
 
-
-
+    handleAnimation() {
         if (this.body.onFloor()) {
             this.jumpCount = 0;
             if (this.body.velocity.x !== 0) {
@@ -125,19 +152,22 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this.play("fall", true);
             }
         }
+    }
 
-        if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
-            this.attack();
+    handleNormalMovement() {
+        if (this.cursors.left.isDown) {
+            this.setVelocityX(-this.playerSpeed);
+            this.setOffset(55, 42);
+            this.flipX = true;
         }
-
-        if (Phaser.Input.Keyboard.JustDown(this.rollKey)) {
-            this.roll();
+        else if (this.cursors.right.isDown) {
+            this.setVelocityX(this.playerSpeed);
+            this.setOffset(45, 42);
+            this.flipX = false;
         }
-
-
-
-        this.previousVelocityY = this.body.velocity.y;
-
+        else {
+            this.setVelocityX(0);
+        }
     }
 
 
@@ -170,6 +200,23 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this.comboStep = 0;
             });
         });
+    }
+
+    attackOnAir() {
+        if (this.isAttacking) return;
+        this.isAttacking = true;
+        this.play("attack2", true);
+        this.once("animationcomplete", () => {
+            this.isAttacking = false;
+        });
+        if (this.cursors.left.isDown) {
+            this.setVelocityX(-this.playerSpeed * 0.8);
+            this.flipX = true;
+        } else if (this.cursors.right.isDown) {
+            this.setVelocityX(this.playerSpeed * 0.8);
+            this.flipX = false;
+        }
+
     }
 
     roll() {
@@ -210,7 +257,44 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
+    playDamageTween() {
+        return this.scene.tweens.add({
+            targets: this,
+            duration: 150,
+            repeat: -1,
+            // yoyo: true,
+            alpha: 0,
+            onComplete: () => {
+                this.alpha = 1;
+            }
+        });
+    }
 
+
+    bounceOff() {
+        this.body.touching.right ?
+            this.setVelocityX(-this.bounceVelocity * 0.6) :
+            this.setVelocityX(this.bounceVelocity * 0.6);
+        setTimeout(() => this.setVelocityY(-this.bounceVelocity), 0);
+
+    }
+    //player takes hit 
+    takesHit(initiator) {
+
+        if (this.hasBeenHit) { return; }
+        this.hasBeenHit = true;
+        this.bounceOff();
+        this.play("takesHit", true);
+        const damgeAnimation = this.playDamageTween();
+
+        this.scene.time.delayedCall(1000, () => {
+            this.hasBeenHit = false;
+            damgeAnimation.stop();
+            this.alpha = 1
+        });
+
+
+    }
 
 
 }

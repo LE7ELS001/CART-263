@@ -43,9 +43,7 @@ class Scene1 extends Phaser.Scene {
 
         // set enemy collider
         enemies.getChildren().forEach(enemy => {
-            player.addCollider(enemy, (player, enemy) => {
-
-            })
+            player.addCollider(enemy, this.onPlayerCollision);
             enemy.addCollider(layers.platformCollider, (enemy, platform) => {
 
             })
@@ -75,6 +73,9 @@ class Scene1 extends Phaser.Scene {
 
 
 
+    onPlayerCollision(player, enemy) {
+        player.takesHit(enemy);
+    }
 
 
     // finishDrawing(pointer, layer) {
