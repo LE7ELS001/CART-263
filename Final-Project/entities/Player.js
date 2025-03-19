@@ -18,6 +18,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.comboStep = 0;  // follow current attack level
         this.comboTimer = null;
 
+        //roll key
+        this.rollKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        this.isRolling = false;
+
+
     }
 
 
@@ -53,7 +58,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     
     update(time, delta) {
 
-        if (this.isAttacking) return; 
+        if (this.isAttacking || this.isRolling) return;
 
         const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(this.cursors.space);
 
@@ -110,6 +115,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
             this.attack();
         }
+
+        if (Phaser.Input.Keyboard.JustDown(this.rollKey)) {
+            this.roll();
+        }
+        
         
 
         this.previousVelocityY = this.body.velocity.y;
@@ -147,6 +157,39 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             });
         });
     }
+
+    roll() {
+        if (this.isRolling || this.isAttacking) return; 
+        this.isRolling = true;
+    
+        this.setVelocityX(this.flipX ? -200 : 200); 
+        this.anims.play("roll", true);  
+    
+        
+        this.body.checkCollision.left = false;
+        this.body.checkCollision.right = false;
+        this.body.checkCollision.up = false;
+    
+        this.setAlpha(0.7); 
+    
+        this.once("animationcomplete", () => {
+            this.isRolling = false;
+    
+            
+            this.body.checkCollision.left = true;
+            this.body.checkCollision.right = true;
+            this.body.checkCollision.up = true;
+    
+            this.setAlpha(1); 
+    
+            if (this.body.velocity.x !== 0) {
+                this.anims.play("run", true);
+            } else {
+                this.anims.play("idle", true);
+            }
+        });
+    }
+    
     
 }
 

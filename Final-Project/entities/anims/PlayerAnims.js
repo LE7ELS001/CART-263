@@ -35,6 +35,14 @@ function PlayerAnimation(anims) {
     });
 
     anims.create({
+        key: "roll",
+        frames: anims.generateFrameNumbers("roll", { start: 0, end: 12 }), 
+        frameRate: 12,  
+        repeat: 0
+    });
+    
+
+    anims.create({
         key: "jump",
         frames: anims.generateFrameNumbers("avatar-jump", {
             start: 0,

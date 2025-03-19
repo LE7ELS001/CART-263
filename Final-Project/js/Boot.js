@@ -34,6 +34,12 @@ class Boot extends Phaser.Scene {
             spacing: 0
         });
 
+        this.load.spritesheet("roll", "Assets/Character/Player/_Roll.png", {
+            frameWidth: 120,  
+            frameHeight: 80,
+            spacing: 0
+        });
+        
         this.load.spritesheet("avatar-jump", "Assets/Character/Player/_Jump.png", {
             frameWidth: 120,
             frameHeight: 80,
