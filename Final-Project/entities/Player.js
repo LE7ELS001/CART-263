@@ -75,17 +75,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             return;
         }
 
-
-
-
-
         this.handleNormalMovement();
         this.handleAnimation();
         this.handleJump();
-
-
-
-
 
         // if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
         //     this.attack();
@@ -172,7 +164,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
 
     attack() {
-        if (this.isAttacking) return;
+        if (this.isAttacking || this.hasBeenHit) return;
         this.isAttacking = true;
 
         this.setVelocityX(0);  // stop moving
@@ -281,8 +273,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     //player takes hit 
     takesHit(initiator) {
 
-        if (this.hasBeenHit) { return; }
+        if (this.hasBeenHit || this.isRolling) { return; }
         this.hasBeenHit = true;
+        this.isAttacking = false;
+
         this.bounceOff();
         this.play("takesHit", true);
         const damgeAnimation = this.playDamageTween();
