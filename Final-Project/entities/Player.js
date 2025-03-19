@@ -12,6 +12,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.init();
         this.initEvents();
 
+        // attack key
+        this.attackKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
+        this.isAttacking = false;
+        this.comboStep = 0;  // follow current attack level
+        this.comboTimer = null;
 
     }
 
@@ -45,7 +50,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
     }
 
+    
     update(time, delta) {
+
+        if (this.isAttacking) return; 
+
         const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(this.cursors.space);
 
         if (this.cursors.left.isDown) {
@@ -98,11 +107,47 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             }
         }
 
+        if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
+            this.attack();
+        }
+        
+
         this.previousVelocityY = this.body.velocity.y;
 
     }
 
 
+    attack() {
+        if (this.isAttacking) return;
+        this.isAttacking = true;
+
+        this.setVelocityX(0);  // stop moving
+        let attackAnim = "";
+
+        // select attack animation
+        if (this.comboStep === 0) {
+            attackAnim = "attack1";
+        } else if (this.comboStep === 1) {
+            attackAnim = "attack2";
+        } 
+
+        this.play(attackAnim, true);
+
+        // End of the animation and allow the next combo
+        this.once("animationcomplete", () => {
+            this.isAttacking = false;
+            this.comboStep++;
+
+            // If the player does not press the attack button within 0.2 seconds, the combo is reset
+            if (this.comboTimer) {
+                this.comboTimer.remove();
+            }
+            this.comboTimer = this.scene.time.delayedCall(200, () => {
+                this.comboStep = 0;
+            });
+        });
+    }
+    
 }
 
 
