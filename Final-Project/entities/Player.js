@@ -96,7 +96,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 console.log("attack");
                 this.attack();
             }
-            else {
+            else if (!this.body.onFloor()) {
                 console.log("attack on air");
                 this.attackOnAir();
             }
