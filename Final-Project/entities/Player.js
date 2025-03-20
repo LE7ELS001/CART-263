@@ -28,7 +28,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         //Maxjump = 0 jump once 
         //Maxjump = 1 double jump
         this.jumpCount = 0;
-        this.maxJump = 0;
+        this.maxJump = 1;
         this.previousVelocityY = 0;
         this.isJumpRequested = false;
 
@@ -109,6 +109,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     handleJump() {
         const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(this.cursors.space);
 
+
+        this.onGroundBuffer = this.body.onFloor() ? 5 : Math.max(this.onGroundBuffer - 1, 0);
+        if (this.onGroundBuffer > 0) {
+            this.jumpCount = 0;
+        }
+
         if (isSpaceJustDown && (this.body.onFloor() || this.jumpCount < this.maxJump)) {
 
             this.setVelocityY(-this.playerSpeed * 2);
@@ -166,15 +172,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     attack() {
         if (this.isAttacking || this.hasBeenHit) return;
         this.isAttacking = true;
-    
+
         this.setVelocityX(0);
         let attackAnim = (this.comboStep === 0) ? "attack1" : "attack2";
         this.play(attackAnim, true);
-    
+
         this.once("animationcomplete", () => {
             this.isAttacking = false;
             this.comboStep++;
-    
+
             if (this.comboTimer) {
                 this.comboTimer.remove();
             }
@@ -183,7 +189,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             });
         });
     }
-    
+
 
     attackOnAir() {
         if (this.isAttacking) return;
@@ -294,14 +300,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.rollCooldown = false;
         this.setAlpha(1);
     }
-    
+
     emergencyReset() {
         this.resetState();
         this.anims.stop();
         this.play("idle");
         this.setVelocityX(0);
     }
-    
+
 
 
 }
