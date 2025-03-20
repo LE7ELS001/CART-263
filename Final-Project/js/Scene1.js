@@ -7,11 +7,20 @@ class Scene1 extends Phaser.Scene {
 
     create() {
 
+        // //creat background
+        // this.background = this.add.image(0, 0, "forest-bg")
+        //     .setOrigin(0, 0)
+        //     .setDepth(-1)
+        //     .setScrollFactor(0); // fix the background
+
+
         //creat background
-        this.background = this.add.image(0, 0, "forest-bg")
-            .setOrigin(0, 0)
-            .setDepth(-1)
-            .setScrollFactor(0); // fix the background
+        this.background = this.add.tileSprite(0, 0, this.sys.game.config.width, this.sys.game.config.height, 'forest-bg');
+        this.background.setOrigin(0, 0)
+        this.background.setDepth(-1)
+        this.background.setScrollFactor(0); // fix the background
+
+
 
 
 
@@ -26,6 +35,7 @@ class Scene1 extends Phaser.Scene {
 
         // create player 
         const player = this.createPlayer(playerZones.start);
+        this.player = player;
 
         // create an end zone 
         this.createEndOfLevel(playerZones.end, player);
@@ -56,7 +66,6 @@ class Scene1 extends Phaser.Scene {
 
 
 
-
         //debug
         this.physics.world.createDebugGraphic();
 
@@ -64,11 +73,16 @@ class Scene1 extends Phaser.Scene {
         //camera 
         this.setupFollowupCameraOn(player);
 
-
-
         // this.input.on('pointerup', pointer => this.finishDrawing(pointer, layers.platforms), this)
+    }
 
+    update() {
+        const cameraScrollX = this.cameras.main.scrollX;
+        this.background.tilePositionX = cameraScrollX * 0.8;
 
+        const cameraScrollY = this.cameras.main.scrollY;
+        this.background.tilePositionY = cameraScrollY * 0.5;
+        //console.log(this.player.x, this.player.y);
     }
 
 
