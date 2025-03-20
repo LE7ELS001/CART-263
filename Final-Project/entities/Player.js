@@ -166,25 +166,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     attack() {
         if (this.isAttacking || this.hasBeenHit) return;
         this.isAttacking = true;
-
-        this.setVelocityX(0);  // stop moving
-        let attackAnim = "";
-
-        // select attack animation
-        if (this.comboStep === 0) {
-            attackAnim = "attack1";
-        } else if (this.comboStep === 1) {
-            attackAnim = "attack2";
-        }
-
+    
+        this.setVelocityX(0);
+        let attackAnim = (this.comboStep === 0) ? "attack1" : "attack2";
         this.play(attackAnim, true);
-
-        // End of the animation and allow the next combo
+    
         this.once("animationcomplete", () => {
             this.isAttacking = false;
             this.comboStep++;
-
-            // If the player does not press the attack button within 0.2 seconds, the combo is reset
+    
             if (this.comboTimer) {
                 this.comboTimer.remove();
             }
@@ -193,6 +183,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             });
         });
     }
+    
 
     attackOnAir() {
         if (this.isAttacking) return;
@@ -281,6 +272,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.play("takesHit", true);
         const damgeAnimation = this.playDamageTween();
 
+        //reset animation
+        this.once("animationcomplete", () => {
+            this.resetState();
+        });
+
         this.scene.time.delayedCall(1000, () => {
             this.hasBeenHit = false;
             damgeAnimation.stop();
@@ -289,6 +285,23 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
 
     }
+
+    //reset any animation in case error
+    resetState() {
+        this.isAttacking = false;
+        this.isRolling = false;
+        this.hasBeenHit = false;
+        this.rollCooldown = false;
+        this.setAlpha(1);
+    }
+    
+    emergencyReset() {
+        this.resetState();
+        this.anims.stop();
+        this.play("idle");
+        this.setVelocityX(0);
+    }
+    
 
 
 }
