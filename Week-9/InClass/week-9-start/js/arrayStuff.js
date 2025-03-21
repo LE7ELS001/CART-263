@@ -142,9 +142,43 @@ window.onload = function () {
   }
 
   function filterArraysX() {
+    console.log(arrayOfShapesTwo);
+    // FILTER ONE
+    let filterArraysX = arrayOfShapesTwo.filter(smaller_posX);
+
+    function smaller_posX(el) {
+      return (
+        (el.x > 200)
+      )
+    }
+
+    console.log(filterArraysX);
+    //then we can map - to change the y :)
+    let arrayOfShapesNew = filterArraysX.map(
+      function (el) {
+        return (new ShapeDef(el.x, el.y + 100, el.shapeClass, el.customShapeClass, el.color))
+
+      });
+    add_New_Els_ToDOM(arrayOfShapesNew, secondRow);
   }
 
   function filterArraysByShape() {
+    // FILTER ONE
+    let filterArraysShape = arrayOfShapesTwo.filter(shape_filter);
+
+    function shape_filter(el) {
+      return (
+        (el.customShapeClass === 'circle')
+      )
+    }
+
+    //then we can map - to change the y :)
+    let arrayOfShapesNew = filterArraysShape.map(
+      function (el) {
+        return (new ShapeDef(el.x, el.y + 200, el.shapeClass, el.customShapeClass, el.color))
+
+      });
+    add_New_Els_ToDOM(arrayOfShapesNew, secondRow);
   }
 
   function forEachCallBackA() {
@@ -194,12 +228,28 @@ window.onload = function () {
     return rgbArray;
   }
 
-  const numbers = [1, 2, 3, 4, 5];
-  const squaredNumbers = numbers.map(
-    function (num) {
-      return (
-        num * num
-      )
-    }
-  );
+  // const numbers = [1, 2, 3, 4, 5];
+  // const squaredNumbers = numbers.map(
+  //   function (num) {
+  //     return (
+  //       num * num
+  //     )
+  //   }
+  // );
+
+  const donuts = [
+    { name: 'mondays_donut', type: 'sparkly' },
+    { name: 'tuesdays_donut', type: 'shiny' },
+    { name: 'wednesdays_donut', type: 'squashy' }
+  ];
+
+  const newObjectFromArray = donuts.reduce((accum, item) => {
+    /* accumulator is the array building */
+    console.log(accum)
+    // add object key to our object i.e. mondays_donut: { type: 'sparkly' }
+    accum[item.name] = { type: item.type };
+    console.log(item.name);
+    return accum;
+  }, {});
+  console.log(newObjectFromArray)
 };
