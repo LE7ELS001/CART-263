@@ -7,6 +7,22 @@ class Scene1 extends Phaser.Scene {
 
     create() {
 
+        // //creat background
+        // this.background = this.add.image(0, 0, "forest-bg")
+        //     .setOrigin(0, 0)
+        //     .setDepth(-1)
+        //     .setScrollFactor(0); // fix the background
+
+
+        //creat background
+        this.background = this.add.tileSprite(0, 0, this.sys.game.config.width, this.sys.game.config.height, 'forest-bg');
+        this.background.setOrigin(0, 0)
+        this.background.setDepth(-1)
+        this.background.setScrollFactor(0); // fix the background
+
+
+
+
 
         //create map
         const map = this.createMap();
@@ -19,30 +35,30 @@ class Scene1 extends Phaser.Scene {
 
         // create player 
         const player = this.createPlayer(playerZones.start);
+        this.player = player;
 
         // create an end zone 
         this.createEndOfLevel(playerZones.end, player);
 
         //create Boards
-        const enemies = this.createEnemies(layers.enemySpawns);
+        const enemies = this.createEnemies(layers.enemySpawns, layers.platformCollider);
 
 
 
 
         //set player collider
         player.addCollider(layers.platformCollider, (player, platorm) => {
-            //console.log("hit the platformCollider");
         });
 
 
         // set enemy collider
         enemies.getChildren().forEach(enemy => {
-            player.addCollider(enemy, (player, enemy) => {
-
-            })
+            player.addCollider(enemy, this.onPlayerCollision);
             enemy.addCollider(layers.platformCollider, (enemy, platform) => {
 
             })
+
+
         })
 
 
@@ -53,35 +69,51 @@ class Scene1 extends Phaser.Scene {
         //debug
         this.physics.world.createDebugGraphic();
 
+
         //camera 
         this.setupFollowupCameraOn(player);
 
-        //light casting 
-        this.graphics = this.add.graphics();
-        this.line = new Phaser.Geom.Line();
-        this.graphics.lineStyle(1, 0x00ff00);
-
-        this.input.on('pointerdown', this.startDrawing, this);
-        this.input.on('pointerup', this.finishDrawing, this)
-
-
-    }
-
-    startDrawing(pointer) {
-        this.line.x1 = pointer.worldX;
-        this.line.y1 = pointer.worldY;
-
-    }
-
-    finishDrawing(pointer) {
-        this.line.x2 = pointer.worldX;
-        this.line.y2 = pointer.worldY;
-        this.graphics.strokeLineShape(this.line);
+        // this.input.on('pointerup', pointer => this.finishDrawing(pointer, layers.platforms), this)
     }
 
     update() {
+        const cameraScrollX = this.cameras.main.scrollX;
+        this.background.tilePositionX = cameraScrollX * 0.8;
 
+        const cameraScrollY = this.cameras.main.scrollY;
+        this.background.tilePositionY = cameraScrollY * 0.5;
+        //console.log(this.player.x, this.player.y);
     }
+
+
+
+    onPlayerCollision(player, enemy) {
+        player.takesHit(enemy);
+    }
+
+
+    // finishDrawing(pointer, layer) {
+    //     this.line.x2 = pointer.worldX;
+    //     this.line.y2 = pointer.worldY;
+    //     this.graphics.clear();
+    //     this.graphics.strokeLineShape(this.line);
+
+    //     this.tileHits = layer.getTilesWithinShape(this.line);
+    //     if (this.tileHits.length > 0) {
+    //         this.tileHits.forEach(tile => {
+    //             if (tile.index !== -1) {
+    //                 tile.setCollision(true);
+    //             }
+    //         })
+    //     }
+
+    //     this.drawDebug(layer);
+    //     this.drawLineOrNo = false;
+
+
+    // }
+
+
 
     createMap() {
         const map = this.make.tilemap({ key: "testMap" });
@@ -113,11 +145,12 @@ class Scene1 extends Phaser.Scene {
         return player;
     }
 
-    createEnemies(spawnLayer) {
+    createEnemies(enemiesSpawnPoint, platformColliders) {
         const enemies = new Enemies();
         const enemyTypes = getEnemyTypes();
-        spawnLayer.objects.forEach(spawnPoint => {
+        enemiesSpawnPoint.objects.forEach(spawnPoint => {
             const enemy = new enemyTypes[spawnPoint.type](this, spawnPoint.x, spawnPoint.y);
+            enemy.setPlatformColliders(platformColliders);
             enemies.add(enemy);
         });
         return enemies;
@@ -128,7 +161,7 @@ class Scene1 extends Phaser.Scene {
         const { height, width, mapOffset, ZoomFactor } = gameConfig;
         this.physics.world.setBounds(0, 0, width + mapOffset, height + 200);
         this.cameras.main.setBounds(0, 0, width + mapOffset, height + 50).setZoom(ZoomFactor);
-        console.log(mapOffset);
+        //console.log(mapOffset);
         this.cameras.main.startFollow(player);
     }
 
@@ -151,3 +184,5 @@ class Scene1 extends Phaser.Scene {
 
 
 }
+
+

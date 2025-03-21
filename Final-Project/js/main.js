@@ -11,10 +11,14 @@ let config = {
     ZoomFactor: 1.5,
     width: 800,
     height: HEIGHT,
+    pixelArt: true,
     parent: 'game-container',
     physics: {
+        debug: true,
         default: 'arcade',
     },
+
+
 
 
 
