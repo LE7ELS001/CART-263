@@ -30,3 +30,38 @@ h1 {
   margin-left: 40px;
 
 }
+
+#colorPetalResult {
+  margin-top: 20px;
+  margin-left: 40px;
+}
+
+#somePetalLengthResult1 {
+  margin-top: 20px;
+  margin-left: 40px;
+}
+
+#somePetalLengthResult2 {
+  margin-top: 20px;
+  margin-left: 40px;
+}
+
+#allPetalWidthResult {
+  margin-top: 20px;
+  margin-left: 40px;
+}
+
+#allPetalWidthResult2 {
+  margin-top: 20px;
+  margin-left: 40px;
+}
+
+.column {
+  position: absolute;
+  bottom: 0;
+  width: 1ch;
+  color: #00FF00;
+  font-size: 0.5em;
+  white-space: nowrap;
+  animation: drop 2s linear infinite;
+}
