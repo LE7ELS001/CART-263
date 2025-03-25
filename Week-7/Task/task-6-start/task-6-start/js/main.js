@@ -36,7 +36,7 @@ function run() {
 
       //split userInput 
       let phrase_as_array = userInput.split(/[.?!\n\s]/);
-      //console.log(phrase_as_array);
+      // console.log(phrase_as_array);
 
       //split Text
       let rainbow_tokens = originalRainBowText.split(/[.?!\n\s]/);
@@ -108,6 +108,7 @@ function run() {
 
 function textColor(text) {
   let words = text.split(" ")
+  console.log(words);
   let wordsLength = words.length;
   let colorWordArray = [];
 
