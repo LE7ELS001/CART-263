@@ -74,7 +74,7 @@ window.onload = async function () {
     let colorPetalResult = irisesWithColors.find(petals => petals.petalWidth > 1)
 
     let colorPetalElement = document.getElementById("colorPetalResult");
-    console.log(colorPetalResult);
+    //console.log(colorPetalResult);
     colorPetalElement.textContent = "Petal Width > 1 : " + JSON.stringify(colorPetalResult);
 
 
@@ -100,38 +100,118 @@ window.onload = async function () {
 
     //task 10
     let irisesWithColorsSorted = irisesWithColors.sort((a, b) => a.petalWidth - b.petalWidth);
-    console.log(irisesWithColorsSorted);
+    //console.log(irisesWithColorsSorted);
 
     //task 11
-    let irisDiv = document.createElement("div");
-    irisDiv.classList.add("iris");
-    document.body.appendChild(irisDiv);
+    let irisCanvas = document.createElement("canvas");
+    irisCanvas.classList.add("iris");
+    irisCanvas.style.width = "100%";
+    irisCanvas.style.height = "100%";
+    const context = irisCanvas.getContext("2d");
 
-    irisDiv.style.position = "absolute";
-    irisDiv.style.top = "0";
-    irisDiv.style.left = "0";
-    irisDiv.style.width = "100%";
-    irisDiv.style.height = "100%";
-    irisDiv.style.pointerEvents = "none";
+    irisCanvas.width = window.innerWidth;
+    irisCanvas.height = window.innerHeight;
 
 
 
-    const columns = Math.floor(window.innerWidth / 15);
 
-    function createMatrix() {
-        for (let i = 0; i < columns; i++) {
-            const column = document.createElement("div");
-            column.classList.add("column");
-            column.style.left = `${i * 150}px`;
 
-            let text = '';
-            for (let j = 0; j < irisesWithColorsSorted.length; j++) {
-                console.log(irisesWithColorsSorted[j]);
-                text += `<div style="background-color:${irisesWithColorsSorted[j].color}">${JSON.stringify(irisesWithColorsSorted[j])}</div>`;
+    const fontSize = 40;
+    let fontColor = '#0F0';
+    const columns = window.innerWidth / fontSize;
+    const rainDrop = [];
+
+    const matrixColors = [
+        '#FF0000',
+        '#FFFF00',
+        '#800080',
+        '#0000FF',
+        '#0F0'
+    ];
+
+    for (let i = 0; i < columns; i++) {
+        rainDrop[i] = 1;
+    }
+
+    const columnData = [];
+    for (let i = 0; i < columns; i++) {
+        columnData[i] = irisesWithColorsSorted[i % irisesWithColorsSorted.length];
+    }
+
+    console.log(irisesWithColorsSorted[0]);
+
+    document.body.appendChild(irisCanvas);
+
+    let frameCounter = 0;
+    const speedFactor = 5;
+    let PlayAnimation = true;
+    let animationID = null;
+
+
+    function draw(color) {
+
+        context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        context.fillRect(0, 0, irisCanvas.width, irisCanvas.height);
+        context.fillStyle = color;
+        context.font = `${fontSize}px monospace`;
+        //context.textBaseline = "top";
+
+        frameCounter++;
+
+        for (let i = 0; i < rainDrop.length; i++) {
+            const dataObject = columnData[i];
+            const text = JSON.stringify(dataObject);
+
+            context.fillText(text, i * fontSize, rainDrop[i] * fontSize);
+
+            if (frameCounter % speedFactor === 0) {
+
+                if (rainDrop[i] * fontSize > irisCanvas.height && Math.random() > 0.975) {
+                    rainDrop[i] = 0;
+                }
+                rainDrop[i]++;
             }
-            column.innerHTML = text;
-            irisDiv.appendChild(column);
+        }
+        if (PlayAnimation) {
+            animationID = requestAnimationFrame(() => draw(fontColor));
         }
     }
-    createMatrix();
+    // setInterval(draw(fontColor), 300);
+
+
+    document.addEventListener("keydown", (event) => {
+        event.preventDefault();
+        if (event.key === " " && PlayAnimation) {
+            PlayAnimation = false;
+            cancelAnimationFrame(animationID);
+        }
+    });
+
+    document.addEventListener("keyup", (event) => {
+        event.preventDefault();
+        if (event.key === " ") {
+            PlayAnimation = true;
+            draw(fontColor);
+        }
+    });
+
+    document.addEventListener("dblclick", (event) => {
+        const randomColor = matrixColors[Math.floor(Math.random() * matrixColors.length)];
+        fontColor = randomColor;
+        console.log(fontColor);
+
+    });
 }
+
+
+// report for task 1 - 10
+// Properties: sepalLength - sepalWidth - petalLength - petalWidth - species
+// Properties with color : sepalLength - sepalWidth - petalLength - petalWidth - species - color
+// Properties with sepalWidth >= 4 :
+// { "sepalLength": 5.8, "sepalWidth": 4, "petalLength": 1.2, "petalWidth": 0.2, "species": "setosa", "color": "#a73fd3" } { "sepalLength": 5.7, "sepalWidth": 4.4, "petalLength": 1.5, "petalWidth": 0.4, "species": "setosa", "color": "#5d3fd3" } { "sepalLength": 5.2, "sepalWidth": 4.1, "petalLength": 1.5, "petalWidth": 0.1, "species": "setosa", "color": "#d3a73f" } { "sepalLength": 5.5, "sepalWidth": 4.2, "petalLength": 1.4, "petalWidth": 0.2, "species": "setosa", "color": "#d35d3f" }
+// Average petalLength: 3.7580000000000027
+// Petal Width > 1 : { "sepalLength": 7, "sepalWidth": 3.2, "petalLength": 4.7, "petalWidth": 1.4, "species": "versicolor", "color": "#d3a73f" }
+// Petal Length > 10 : Not Exist
+// Petal Length = 4.2 : Exist
+// Petal Width < 3 : Exist
+// Petal Width > 1.2 : Not Exist

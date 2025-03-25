@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
   font-family: 'Roboto', sans-serif;
 }
 
@@ -65,3 +66,7 @@ h1 {
   white-space: nowrap;
   animation: drop 2s linear infinite;
 }
+
+/* .matrixContainer {
+  display: flex;
+} */
