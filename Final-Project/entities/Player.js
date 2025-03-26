@@ -47,7 +47,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.hasBeenHit = false;
         this.bounceVelocity = 120;
 
+        //player health 
+        this.health = 100;
 
+
+        //create health bar 
+        const gameConfig = this.scene.registry.get("gameConfig");
+        this.hp = new HealthBar(this.scene, gameConfig.leftTopCorner.x + 25, gameConfig.leftTopCorner.y + + 10, this.health);
 
         //player physics
         this.body.setGravityY(this.gravity);
