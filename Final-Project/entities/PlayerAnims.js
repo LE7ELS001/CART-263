@@ -54,6 +54,16 @@ function PlayerAnimation(anims) {
         //stopOnLastFrame: true
 
     });
+
+    // anims.create({
+    //     key: "player-Projectile",
+    //     frames: anims.generateFrameNumbers("playerProjectile", {
+    //         start: 0,
+    //         end: 3
+    //     }),
+    //     frameRate: 10,
+    //     repeat: -1,
+    // });
 }
 
 

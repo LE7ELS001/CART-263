@@ -20,6 +20,7 @@ let config = {
     rightTopCorner: {
         x: ((WIDTH / ZOOM_FACTOR) + ((WIDTH - (WIDTH / ZOOM_FACTOR)) / 2)),
         y: (HEIGHT - (HEIGHT / ZOOM_FACTOR)) / 2
+
     },
     parent: 'game-container',
     physics: {
@@ -41,6 +42,6 @@ game.registry.set("gameConfig", {
     height: config.height,
     ZoomFactor: config.ZoomFactor,
     leftTopCorner: config.leftTopCorner,
-    rightTopCorner: congif.rightTopCorner
+    rightTopCorner: config.rightTopCorner
 });
 

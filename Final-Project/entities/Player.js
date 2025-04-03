@@ -53,7 +53,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         //create health bar 
         const gameConfig = this.scene.registry.get("gameConfig");
-        this.hp = new HealthBar(this.scene, gameConfig.leftTopCorner.x + 25, gameConfig.leftTopCorner.y + + 10, this.health);
+        this.hp = new HealthBar(this.scene, gameConfig.leftTopCorner.x + 25, gameConfig.leftTopCorner.y + 10, 1.32, this.health);
 
         //player physics
         this.body.setGravityY(this.gravity);
@@ -67,6 +67,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         PlayerAnimation(this.scene.anims);
 
         this.cursors = this.scene.input.keyboard.createCursorKeys();
+
+        this.scene.input.keyboard.on('keydown-C', () => {
+            console.log('you press c')
+            const projectile = new Player_projectile(this.scene, this.x, this.y, "test-projectile");
+            projectile.fire();
+
+        });
     }
 
     initEvents() {
@@ -283,6 +290,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.bounceOff();
         this.play("takesHit", true);
         const damgeAnimation = this.playDamageTween();
+
+        this.health -= initiator.damage;
+        this.hp.decrease(this.health);
 
         //reset animation
         this.once("animationcomplete", () => {

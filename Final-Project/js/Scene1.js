@@ -59,7 +59,7 @@ class Scene1 extends Phaser.Scene {
             })
 
 
-        })
+        });
 
 
 
@@ -74,6 +74,7 @@ class Scene1 extends Phaser.Scene {
         this.setupFollowupCameraOn(player);
 
         // this.input.on('pointerup', pointer => this.finishDrawing(pointer, layers.platforms), this)
+
     }
 
     update() {
