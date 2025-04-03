@@ -47,6 +47,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.hasBeenHit = false;
         this.bounceVelocity = 120;
 
+        //projectile pool 
+        this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
+        this.ProjectilesPool = new ProjectilesPool(this.scene);
+        this.isLaunchAnimationPlaying = false;
+
+        this.lastLaunchTime = 0;
+        this.launchCoolDown = 1000;
+
+
         //player health 
         this.health = 100;
 
@@ -69,10 +78,23 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.cursors = this.scene.input.keyboard.createCursorKeys();
 
         this.scene.input.keyboard.on('keydown-C', () => {
-            console.log('you press c')
-            const projectile = new Player_projectile(this.scene, this.x, this.y, "test-projectile");
-            projectile.fire();
 
+            if (this.isInLaunchCoolDown()) {
+                console.log("In cool down");
+                return;
+            }
+
+            this.isLaunchAnimationPlaying = true;
+            this.play("launch", true);
+            //console.log(this.scene.anims.exists('launch'));
+            this.once("animationcomplete", () => {
+                this.isLaunchAnimationPlaying = false;
+                this.handleAnimation();
+            });
+
+            this.ProjectilesPool.fireProjectile(this);
+
+            this.lastLaunchTime = this.scene.time.now;
         });
     }
 
@@ -88,13 +110,19 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             return;
         }
 
+        if (this.isLaunchAnimationPlaying) {
+            return;
+        }
+
+
+
+
+
         this.handleNormalMovement();
         this.handleAnimation();
         this.handleJump();
 
-        // if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
-        //     this.attack();
-        // }
+
 
         if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
             if (this.body.onFloor()) {
@@ -115,6 +143,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.previousVelocityY = this.body.velocity.y;
 
+    }
+
+    isInLaunchCoolDown() {
+        const currentTime = this.scene.time.now;
+        return (currentTime - this.lastLaunchTime) < this.launchCoolDown;
     }
 
 
@@ -139,7 +172,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     handleAnimation() {
+
+
         if (this.body.onFloor()) {
+
             this.jumpCount = 0;
             if (this.body.velocity.x !== 0) {
                 this.play("run", true);
@@ -166,12 +202,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     handleNormalMovement() {
+        if (this.isLaunchAnimationPlaying) { return };
         if (this.cursors.left.isDown) {
+            this.lastDirection = Phaser.Physics.Arcade.FACING_LEFT;
             this.setVelocityX(-this.playerSpeed);
             this.setOffset(55, 42);
             this.flipX = true;
         }
         else if (this.cursors.right.isDown) {
+            this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
             this.setVelocityX(this.playerSpeed);
             this.setOffset(45, 42);
             this.flipX = false;
@@ -193,6 +232,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.once("animationcomplete", () => {
             this.isAttacking = false;
             this.comboStep++;
+
+
 
             if (this.comboTimer) {
                 this.comboTimer.remove();
@@ -277,6 +318,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.touching.right ?
             this.setVelocityX(-this.bounceVelocity * 0.6) :
             this.setVelocityX(this.bounceVelocity * 0.6);
+
         setTimeout(() => this.setVelocityY(-this.bounceVelocity), 0);
 
     }

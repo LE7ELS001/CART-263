@@ -21,8 +21,8 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     init() {
         this.gravity = 500;
         this.Speed = 75;
-        this.health = 100;
-        this.damage = 20;
+        this.health = 30;
+        this.damage = 25;
         this.scale = 1.5;
         this.resetTimeAfterTurn = 0;
         this.maxMoveDistance = 100;
@@ -82,6 +82,15 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.platformColliders = platformColliders;
     }
 
+    takesHit(source) {
+        this.health -= source.damage;
+
+        source.setActive(false);
+        source.setVisible(false);
+        if (this.health <= 0) {
+            console.log('enemy is dead')
+        }
+    }
 
 
 }

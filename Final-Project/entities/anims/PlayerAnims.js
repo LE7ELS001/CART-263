@@ -91,7 +91,14 @@ function PlayerAnimation(anims) {
         frames: [{ key: 'avatar-takesHit', frame: 0 }],
         frameRate: 1,
         repeat: -1
-    })
+    });
+
+    anims.create({
+        key: "launch",
+        frames: anims.generateFrameNumbers("attack1", { start: 0, end: 3 }),
+        frameRate: 15,
+        repeat: 0
+    });
 }
 
 
