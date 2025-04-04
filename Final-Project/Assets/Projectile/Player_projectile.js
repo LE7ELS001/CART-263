@@ -26,19 +26,31 @@ class Player_projectile extends Phaser.Physics.Arcade.Sprite {
 
         if (this.isOutOfRange()) {
             this.body.reset(0, 0)
-            this.setActive(false);
-            this.setVisible(false);
+            this.activeProjectile(false);
             this.traveledDistance = 0;
         }
     }
 
     fire(x, y) {
         this.setDisplaySize(this.projectileWdith, this.projectileHeight);
-        this.setActive(true);
-        this.setVisible(true);
+        this.activeProjectile(true);
         this.body.reset(x, y);
         this.play("playerProjectile", true);
         this.setVelocityX(this.speed);
+    }
+
+    deliverHit(target) {
+        this.activeProjectile(false);
+        this.traveledDistance = 0;
+        this.body.reset(0, 0);
+        new spriteEffect(this.scene, 0, 0, "enemyDead").playOn(target);
+
+    }
+
+    activeProjectile(isActive) {
+        this.setActive(isActive);
+        this.setVisible(isActive);
+
     }
 
     isOutOfRange() {

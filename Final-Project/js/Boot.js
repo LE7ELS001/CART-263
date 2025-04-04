@@ -116,8 +116,14 @@ class Boot extends Phaser.Scene {
             endFrame: 3
         });
 
-        //test projectile 
-        this.load.image('test-projectile', "Assets/Effect/Projectile/Player_projectile1.png");
+
+        //load enemy dead Effect 
+        this.load.spritesheet("enemy_dead", "Assets/Effect/Enemy_Dead/Enemies_dead.png", {
+            frameWidth: 32,
+            frameHeight: 32,
+            spacing: 0,
+            endFrame: 3
+        })
 
         //load background
         this.load.image("forest-bg", "Assets/Map/background forest.png");

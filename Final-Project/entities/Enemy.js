@@ -41,6 +41,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.setOrigin(0.5, 1);
         this.setVelocityX(-this.Speed);
         BoarAnims(this.scene.anims);
+        effectAnims(this.scene.anims, this.scene);
 
     }
 
@@ -83,13 +84,17 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     takesHit(source) {
+        source.deliverHit(this);
         this.health -= source.damage;
 
-        source.setActive(false);
-        source.setVisible(false);
+
         if (this.health <= 0) {
             console.log('enemy is dead')
         }
+    }
+
+    deadEffect() {
+
     }
 
 

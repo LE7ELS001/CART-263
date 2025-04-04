@@ -317,11 +317,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
 
     bounceOff() {
-        this.body.touching.right ?
-            this.setVelocityX(-this.bounceVelocity * 0.6) :
-            this.setVelocityX(this.bounceVelocity * 0.6);
-
-        setTimeout(() => this.setVelocityY(-this.bounceVelocity), 0);
+        // this.body.touching.right ?
+        // this.setVelocityX(-this.bounceVelocity * 0.6) :
+        // this.setVelocityX(this.bounceVelocity * 0.6);
+        //setTimeout(() => this.setVelocityY(-this.bounceVelocity ), 0);
+        this.setVelocityY(-this.bounceVelocity * 1.5);
 
     }
     //player takes hit 
