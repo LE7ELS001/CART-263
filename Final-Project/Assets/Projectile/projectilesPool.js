@@ -45,12 +45,12 @@ class ProjectilesPool extends Phaser.Physics.Arcade.Group {
         if (initiator.lastDirection === Phaser.Physics.Arcade.FACING_RIGHT) {
             projectile.speed = Math.abs(projectile.speed);
             projectile.setFlipX(false);
-            centerX = center.x + 75;
+            centerX = center.x + 15;
         }
         else {
             projectile.speed = -Math.abs(projectile.speed);
             projectile.setFlipX(true);
-            centerX = center.x - 75;
+            centerX = center.x - 15;
 
         }
 

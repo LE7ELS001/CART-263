@@ -87,6 +87,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         source.deliverHit(this);
         this.health -= source.damage;
 
+        this.playDamageTween();
 
         if (this.health <= 0) {
             console.log('enemy is dead')
@@ -97,6 +98,31 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     }
 
+    playDamageTween() {
+        if (this.damageTween && this.damageTween.isPlaying()) {
+            this.damageTween.stop();
+        }
+
+
+        const flashColor = 0xffffff;
+        const flashDuration = 25;
+        const flashRepeats = 3;
+
+        this.setTintFill(flashColor);
+
+        this.damageTween = this.scene.tweens.add({
+            targets: this,
+            duration: flashDuration,
+            repeat: flashRepeats,
+            yoyo: true,
+            ease: 'Linear',
+            alpha: { from: 1, to: 0.5 },
+            onComplete: () => {
+                this.clearTint();
+                this.setAlpha(1);
+            }
+        });
+    }
 
 }
 
