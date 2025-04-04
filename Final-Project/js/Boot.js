@@ -109,13 +109,14 @@ class Boot extends Phaser.Scene {
 
 
         //load projectile 
-        this.load.spritesheet("playerProjectile", "Assets/Effect/Projectile/Player_projectile1.png", {
+        this.load.spritesheet("player_Projectile", "Assets/Effect/Projectile/Player_projectile1.png", {
             frameWidth: 32,
             frameHeight: 31,
             spacing: 0,
             endFrame: 3
         });
 
+        //test projectile 
         this.load.image('test-projectile', "Assets/Effect/Projectile/Player_projectile1.png");
 
         //load background

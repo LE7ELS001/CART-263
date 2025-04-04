@@ -12,6 +12,9 @@ class Player_projectile extends Phaser.Physics.Arcade.Sprite {
 
         this.damage = 50;
         this.coolDown = 1000;
+        this.projectileWdith = 45;
+        this.projectileHeight = 64;
+
 
 
     }
@@ -30,9 +33,11 @@ class Player_projectile extends Phaser.Physics.Arcade.Sprite {
     }
 
     fire(x, y) {
+        this.setDisplaySize(this.projectileWdith, this.projectileHeight);
         this.setActive(true);
         this.setVisible(true);
         this.body.reset(x, y);
+        this.play("playerProjectile", true);
         this.setVelocityX(this.speed);
     }
 

@@ -1,14 +1,24 @@
 
 class ProjectilesPool extends Phaser.Physics.Arcade.Group {
-    constructor(scene) {
+    constructor(scene, key = 'playerProjectile') {
         super(scene.physics.world, scene);
+
+
+        this.key = key;
+        let projcetileClass;
+
+        switch (key) {
+            case 'playerProjectile':
+                projcetileClass = Player_projectile;
+                break;
+        }
 
         this.createMultiple({
             frameQuantity: 5,
             active: false,
             visible: false,
-            key: 'test-projectile',
-            classType: Player_projectile
+            key: this.key,
+            classType: projcetileClass
         });
 
         this.timeFromLastShoot = null;

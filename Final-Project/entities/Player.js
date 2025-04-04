@@ -49,11 +49,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         //projectile pool 
         this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
-        this.ProjectilesPool = new ProjectilesPool(this.scene);
+        this.ProjectilesPool = new ProjectilesPool(this.scene, 'playerProjectile');
         this.isLaunchAnimationPlaying = false;
 
         this.lastLaunchTime = 0;
-        this.launchCoolDown = 1000;
+        this.launchCoolDown = 1100;
 
 
         //player health 
@@ -76,6 +76,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         PlayerAnimation(this.scene.anims);
 
         this.cursors = this.scene.input.keyboard.createCursorKeys();
+
+        projectilesAnimation(this.scene.anims);
 
         this.scene.input.keyboard.on('keydown-C', () => {
 
