@@ -17,6 +17,7 @@ class spriteEffect extends Phaser.Physics.Arcade.Sprite {
 
     }
 
+    //if you use flashing effect, you can use this when enemies is dead
     preUpdate(time, delta) {
         super.preUpdate(time, delta);
         this.placeEffect();

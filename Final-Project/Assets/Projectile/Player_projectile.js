@@ -6,15 +6,16 @@ class Player_projectile extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        this.speed = 300;
-        this.maxDistance = 300;
+        this.speed = 400;
+        this.maxDistance = 550;
         this.traveledDistance = 0;
 
         this.damage = 50;
         this.coolDown = 1000;
-        this.projectileWdith = 45;
-        this.projectileHeight = 64;
+        this.projectileWdith = 55;
+        this.projectileHeight = 94;
 
+        this.effectManager = new effectManager(this.scene);
 
 
     }
@@ -43,7 +44,9 @@ class Player_projectile extends Phaser.Physics.Arcade.Sprite {
         this.activeProjectile(false);
         this.traveledDistance = 0;
         this.body.reset(0, 0);
-        new spriteEffect(this.scene, 0, 0, "enemyDead").playOn(target);
+        //this.effectManager.playEffectOn("enemyDead", target);
+
+
 
     }
 
