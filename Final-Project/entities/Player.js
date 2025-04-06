@@ -23,6 +23,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         //player properties
         this.gravity = 500;
         this.playerSpeed = 150;
+        this.damage = 10;
 
         //jump
         //Maxjump = 0 jump once 
@@ -55,6 +56,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.lastLaunchTime = 0;
         this.launchCoolDown = 1100;
 
+        //create attack box 
+        this.attackBox = new AttackBox(this.scene, 0, 0, "attack-box", this.damage);
 
         //player health 
         this.health = 100;
@@ -227,11 +230,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.isAttacking || this.hasBeenHit) return;
         this.isAttacking = true;
 
+        this.attackBox.swing(this);
         this.setVelocityX(0);
         let attackAnim = (this.comboStep === 0) ? "attack1" : "attack2";
         this.play(attackAnim, true);
 
         this.once("animationcomplete", () => {
+
+            this.attackBox.activeAttackBox(false);
+
             this.isAttacking = false;
             this.comboStep++;
 
@@ -249,9 +256,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     attackOnAir() {
         if (this.isAttacking) return;
+
+
+        this.attackBox.swing(this);
+
         this.isAttacking = true;
         this.play("attack2", true);
         this.once("animationcomplete", () => {
+            this.attackBox.activeAttackBox(false);
             this.isAttacking = false;
         });
         if (this.cursors.left.isDown) {

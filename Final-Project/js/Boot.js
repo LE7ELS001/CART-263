@@ -123,7 +123,10 @@ class Boot extends Phaser.Scene {
             frameHeight: 32,
             spacing: 0,
             endFrame: 3
-        })
+        });
+
+        //load attack box sprite(empty)
+        this.load.image("attack-box", "Assets/AttackBox/attackBox_Sprite.png");
 
         //load background
         this.load.image("forest-bg", "Assets/Map/background forest.png");
