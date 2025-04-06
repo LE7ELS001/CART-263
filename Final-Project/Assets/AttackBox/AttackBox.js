@@ -54,6 +54,19 @@ class AttackBox extends Phaser.Physics.Arcade.Sprite {
         this.setVisible(isActive);
         this.body.reset(0, 0);
 
+        if (!isActive) {
+            this.body.checkCollision.none = false;
+        }
+
+    }
+
+    deliverHit(target) {
+        this.body.checkCollision.none = true;
+
+        //this.effectManager.playEffectOn("enemyDead", target);
+
+
+
     }
 }
 

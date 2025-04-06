@@ -82,6 +82,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         projectilesAnimation(this.scene.anims);
 
+        //launch projectile
         this.scene.input.keyboard.on('keydown-C', () => {
 
             if (this.isInLaunchCoolDown()) {
