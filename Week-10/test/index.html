@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>曼德布罗集合动画</title>
+    <style>
+        canvas {
+            display: block;
+            margin: auto;
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        const width = canvas.width;
+        const height = canvas.height;
+        const maxIterations = 300;
+
+        let scale = 1;
+        let centerX = -0.75;
+        let centerY = 0;
+        let zoomSpeed = 1.005;  // 更平滑的缩放速度
+        let frame = 0;  // 用于调节帧数
+
+        // 曼德布罗集合计算函数
+        function mandelbrot(cx, cy) {
+            let x = 0;
+            let y = 0;
+            let iteration = 0;
+
+            while (x * x + y * y <= 4 && iteration < maxIterations) {
+                const tempX = x * x - y * y + cx;
+                y = 2 * x * y + cy;
+                x = tempX;
+                iteration++;
+            }
+            return iteration;
+        }
+
+        // 绘制曼德布罗集合
+        function drawMandelbrot() {
+            for (let px = 0; px < width; px++) {
+                for (let py = 0; py < height; py++) {
+                    const cx = centerX + (px - width / 2) / (0.5 * scale * width);
+                    const cy = centerY + (py - height / 2) / (0.5 * scale * height);
+
+                    const iteration = mandelbrot(cx, cy);
+
+                    // 颜色渐变平滑
+                    const color = iteration === maxIterations
+                        ? 'black'
+                        : `hsl(${(iteration / maxIterations) * 360}, 100%, 50%)`;
+
+                    ctx.fillStyle = color;
+                    ctx.fillRect(px, py, 1, 1);
+                }
+            }
+        }
+
+        // 动画渲染循环
+        function animate() {
+            drawMandelbrot();
+            scale *= zoomSpeed;  // 缩放
+
+            // 根据帧数调整缩放速度，使动画看起来更平滑
+            frame++;
+            if (frame % 60 === 0) {  // 每秒调整一次
+                zoomSpeed += 0.0005;  // 增加缩放的速度，保持流畅
+            }
+
+            // 无限循环动画
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>
