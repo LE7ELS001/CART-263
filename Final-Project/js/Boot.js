@@ -131,7 +131,7 @@ class Boot extends Phaser.Scene {
 
         //load enemy projectile 
         this.load.spritesheet("mushroom_Projectile", "Assets/Effect/Projectile/Mushroom_Projectile.png", {
-            frameWidth: 40,
+            frameWidth: 50,
             frameHeight: 18,
             endFrame: 7,
         })

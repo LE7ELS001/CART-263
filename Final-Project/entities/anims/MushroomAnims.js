@@ -18,7 +18,7 @@ function MushRoomAnims(anims) {
                 start: 0,
                 end: 7
             }),
-            frameRate: 15,
+            frameRate: 8,
             repeat: 0
         });
     }
@@ -28,7 +28,7 @@ function MushRoomAnims(anims) {
             key: "MushroomIdle",
             frames: anims.generateFrameNumbers("Mushroom-idle", {
                 start: 0,
-                end: 7
+                end: 3
             }),
             frameRate: 15,
             repeat: 0
