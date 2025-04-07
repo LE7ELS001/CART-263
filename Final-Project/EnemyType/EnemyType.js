@@ -1,6 +1,7 @@
 function getEnemyTypes() {
     return {
-        Boar: Boar
+        Boar: Boar,
+        Mushroom: Mushroom,
     };
 }
 
