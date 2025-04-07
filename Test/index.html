@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>borderRadius 和 borderWidth 演示</title>
+    <style>
+        .box {
+            width: 100px;
+            height: 100px;
+            margin: 20px;
+            display: inline-block;
+        }
+
+        /* 🔷 正方形，没有圆角 */
+        .square {
+            border-width: 5px;
+            background-color: lightblue;
+        }
+
+        /* 🔵 圆角矩形 */
+        .rounded {
+            background-color: lightcoral;
+            border-radius: 20px;
+        }
+
+        /* ⚪ 完全圆形 */
+        .circle {
+            background-color: lightgreen;
+            border-radius: 50%;
+        }
+
+        /* 🔲 有边框的正方形 */
+        .border-square {
+            background-color: white;
+            border-width: 25px;
+            border-style: solid;
+            border-color: black;
+        }
+
+        /* 🔘 有边框的圆形 */
+        .border-circle {
+            background-color: white;
+            border-radius: 50%;
+            border-width: 5px;
+            border-style: solid;
+            border-color: black;
+        }
+
+        /* 🏵️ 只用边框做花瓣 */
+        .border-flower {
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            border-width: 100px;
+            border-style: solid;
+            border-color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box square">方形</div>
+    <div class="box rounded">圆角矩形</div>
+    <div class="box circle">圆形</div>
+
+    <div class="box border-square">带边框方形</div>
+    <div class="box border-circle">带边框圆形</div>
+    <div class="box border-flower"></div>
+
+</body>
+
+</html>

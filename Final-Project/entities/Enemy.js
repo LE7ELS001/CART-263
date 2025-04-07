@@ -9,9 +9,11 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
 
         Object.assign(this, CollisionMixin);
+        this.gameConfig = scene.registry.get("gameConfig");
         this.init();
         this.initEvents();
 
+        this.effectManager = new effectManager(this.scene);
 
 
     }
@@ -19,10 +21,11 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
 
     init() {
+        this.deadHeight = this.gameConfig.height;
         this.gravity = 500;
         this.Speed = 75;
-        this.health = 100;
-        this.attack = 20;
+        this.health = 30;
+        this.damage = 25;
         this.scale = 1.5;
         this.resetTimeAfterTurn = 0;
         this.maxMoveDistance = 100;
@@ -41,6 +44,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.setOrigin(0.5, 1);
         this.setVelocityX(-this.Speed);
         BoarAnims(this.scene.anims);
+        effectAnims(this.scene.anims, this.scene);
 
     }
 
@@ -49,6 +53,14 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time) {
+        if (this.getBounds().bottom > this.deadHeight) {
+            this.scene.events.removeListener(Phaser.Scenes.Events.UPDATE, this.update, this);
+            this.setActive(false);
+            this.rayGraphics.clear();
+            this.destroy();
+            return;
+        }
+
         this.patrol(time);
 
 
@@ -65,7 +77,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         if ((!hitTheLayer || this.currentDistance >= this.maxMoveDistance) &&
             this.resetTimeAfterTurn + 100 < time) {
             this.setFlipX(this.Speed < 0);
-            console.log
             this.setVelocityX(this.Speed = -this.Speed);
             this.resetTimeAfterTurn = time;
             this.currentDistance = 0;
@@ -82,7 +93,85 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.platformColliders = platformColliders;
     }
 
+    takesHit(source) {
+        source.deliverHit(this);
+        this.health -= source.damage;
 
+        const tween = this.playDamageTween();
+
+        if (this.health <= 0) {
+            const deathX = this.x;
+            const deathY = this.y;
+            tween.on('complete', () => {
+                // this.effectManager.playEffectOn("enemyDead", this);
+                this.playDeathAnimation();
+                this.setVisible(false);
+                this.body.checkCollision.none = true;
+                console.log('enemy is dead');
+            });
+        }
+    }
+
+    playDeathAnimation() {
+        const deathX = this.body.center.x;
+        const deathY = this.body.bottom;
+
+
+        const deathEffect = this.scene.add.sprite(deathX, deathY, 'enemy_dead')
+            .setOrigin(0.5, 1)
+            .setScale(this.scale)
+            .setDepth(this.depth)
+            .play('enemyDead');
+
+
+        deathEffect.once('animationcomplete', () => {
+            deathEffect.destroy();
+        });
+
+
+
+    }
+
+
+
+
+    playDamageTween() {
+        if (this.damageTween && this.damageTween.isPlaying()) {
+            this.damageTween.stop();
+        }
+
+
+        const flashColor = 0xffffff;
+        const flashDuration = 15;
+        const flashRepeats = 2;
+
+        this.setTintFill(flashColor);
+
+        // this.damageTween = this.scene.tweens.add({
+        //     targets: this,
+        //     duration: flashDuration,
+        //     repeat: flashRepeats,
+        //     yoyo: true,
+        //     ease: 'Linear',
+        //     alpha: { from: 1, to: 0.5 },
+        //     onComplete: () => {
+        //         this.clearTint();
+        //         this.setAlpha(1);
+        //     }
+        // });
+        return this.damageTween = this.scene.tweens.add({
+            targets: this,
+            duration: flashDuration,
+            repeat: flashRepeats,
+            yoyo: true,
+            ease: 'Linear',
+            alpha: { from: 1, to: 0.5 },
+            onComplete: () => {
+                this.clearTint();
+                this.setAlpha(1);
+            }
+        });
+    }
 
 }
 

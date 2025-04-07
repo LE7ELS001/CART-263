@@ -16,7 +16,7 @@ function PlayerAnimation(anims) {
             start: 0,
             end: 9
         }),
-        frameRate: 15,
+        frameRate: 20,
         repeat: -1
     });
 
@@ -27,7 +27,7 @@ function PlayerAnimation(anims) {
             start: 0,
             end: 2
         }),
-        frameRate: 12,
+        frameRate: 20,
         repeat: -1
     });
 
@@ -37,7 +37,7 @@ function PlayerAnimation(anims) {
             start: 0,
             end: 2
         }),
-        frameRate: 12,
+        frameRate: 20,
         repeat: -1,
 
 
@@ -54,6 +54,16 @@ function PlayerAnimation(anims) {
         //stopOnLastFrame: true
 
     });
+
+    // anims.create({
+    //     key: "player-Projectile",
+    //     frames: anims.generateFrameNumbers("playerProjectile", {
+    //         start: 0,
+    //         end: 3
+    //     }),
+    //     frameRate: 10,
+    //     repeat: -1,
+    // });
 }
 
 

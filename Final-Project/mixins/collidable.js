@@ -2,6 +2,9 @@ const CollisionMixin = {
     addCollider(otherGameObject, callback) {
         this.scene.physics.add.collider(this, otherGameObject, callback, null, this);
     },
+    addOverlap(otherGameObject, callback) {
+        this.scene.physics.add.overlap(this, otherGameObject, callback, null, this);
+    },
 
     bodyPositionDifferenceX: 0,
     prevRay: null,

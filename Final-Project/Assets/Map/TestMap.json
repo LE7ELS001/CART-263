@@ -271,8 +271,8 @@
                  "type":"Boar",
                  "visible":true,
                  "width":0,
-                 "x":398.666666666667,
-                 "y":474.666666666667
+                 "x":645.666666666667,
+                 "y":358.666666666667
                 }, 
                 {
                  "height":0,
@@ -285,6 +285,18 @@
                  "width":0,
                  "x":824,
                  "y":386.666666666667
+                }, 
+                {
+                 "height":0,
+                 "id":7,
+                 "name":"Spawn",
+                 "point":true,
+                 "rotation":0,
+                 "type":"Mushroom",
+                 "visible":true,
+                 "width":0,
+                 "x":477,
+                 "y":468
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -328,7 +340,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":6,
+ "nextobjectid":8,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

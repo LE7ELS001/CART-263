@@ -56,15 +56,10 @@ class Scene1 extends Phaser.Scene {
             player.addCollider(enemy, this.onPlayerCollision);
             enemy.addCollider(layers.platformCollider, (enemy, platform) => {
 
-            })
-
-
-        })
-
-
-
-
-
+            });
+            enemy.addCollider(this.player.ProjectilesPool, this.onWeaponHit);
+            enemy.addOverlap(this.player.attackBox, this.onWeaponHit);
+        });
 
         //debug
         this.physics.world.createDebugGraphic();
@@ -74,6 +69,7 @@ class Scene1 extends Phaser.Scene {
         this.setupFollowupCameraOn(player);
 
         // this.input.on('pointerup', pointer => this.finishDrawing(pointer, layers.platforms), this)
+
     }
 
     update() {
@@ -86,6 +82,10 @@ class Scene1 extends Phaser.Scene {
     }
 
 
+    onWeaponHit(entity, source) {
+        entity.takesHit(source);
+
+    }
 
     onPlayerCollision(player, enemy) {
         player.takesHit(enemy);

@@ -99,6 +99,19 @@ class Boot extends Phaser.Scene {
             endFrame: 5
         });
 
+        //mushroom 
+        this.load.spritesheet("Mushroom-run", "Assets/enemy/Mushroom/Run.png", {
+            frameWidth: 150,
+            frameHeight: 39,
+            endFrame: 7
+        });
+
+        this.load.spritesheet("Mushroom-idle", "Assets/enemy/Mushroom/Idle.png", {
+            frameWidth: 150,
+            frameHeight: 39,
+            endFrame: 3
+        })
+
 
         //load map tile
         this.load.tilemapTiledJSON('testMap', "Assets/Map/TestMap.json");
@@ -107,6 +120,33 @@ class Boot extends Phaser.Scene {
 
         this.load.image("Test-tile", "Assets/Tiles/Forest/Tiles.png");
 
+
+        //load player projectile 
+        this.load.spritesheet("player_Projectile", "Assets/Effect/Projectile/Player_projectile1.png", {
+            frameWidth: 32,
+            frameHeight: 31,
+            spacing: 0,
+            endFrame: 3
+        });
+
+        //load enemy projectile 
+        this.load.spritesheet("mushroom_Projectile", "Assets/Effect/Projectile/Mushroom_Projectile.png", {
+            frameWidth: 50,
+            frameHeight: 18,
+            endFrame: 7,
+        })
+
+
+        //load enemy dead Effect 
+        this.load.spritesheet("enemy_dead", "Assets/Effect/Enemy_Dead/Enemies_dead.png", {
+            frameWidth: 32,
+            frameHeight: 32,
+            spacing: 0,
+            endFrame: 3
+        });
+
+        //load attack box sprite(empty)
+        this.load.image("attack-box", "Assets/AttackBox/attackBox_Sprite.png");
 
         //load background
         this.load.image("forest-bg", "Assets/Map/background forest.png");

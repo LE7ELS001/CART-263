@@ -23,6 +23,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         //player properties
         this.gravity = 500;
         this.playerSpeed = 150;
+        this.damage = 10;
 
         //jump
         //Maxjump = 0 jump once 
@@ -47,7 +48,24 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.hasBeenHit = false;
         this.bounceVelocity = 120;
 
+        //projectile pool 
+        this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
+        this.ProjectilesPool = new ProjectilesPool(this.scene, 'playerProjectile');
+        this.isLaunchAnimationPlaying = false;
 
+        this.lastLaunchTime = 0;
+        this.launchCoolDown = 1100;
+
+        //create attack box 
+        this.attackBox = new AttackBox(this.scene, 0, 0, "attack-box", this.damage);
+
+        //player health 
+        this.health = 100;
+
+
+        //create health bar 
+        const gameConfig = this.scene.registry.get("gameConfig");
+        this.hp = new HealthBar(this.scene, gameConfig.leftTopCorner.x + 25, gameConfig.leftTopCorner.y + 10, 1.32, this.health);
 
         //player physics
         this.body.setGravityY(this.gravity);
@@ -61,6 +79,29 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         PlayerAnimation(this.scene.anims);
 
         this.cursors = this.scene.input.keyboard.createCursorKeys();
+
+        projectilesAnimation(this.scene.anims);
+
+        //launch projectile
+        this.scene.input.keyboard.on('keydown-C', () => {
+
+            if (this.isInLaunchCoolDown()) {
+                console.log("In cool down");
+                return;
+            }
+
+            this.isLaunchAnimationPlaying = true;
+            this.play("launch", true);
+            //console.log(this.scene.anims.exists('launch'));
+            this.once("animationcomplete", () => {
+                this.isLaunchAnimationPlaying = false;
+                this.handleAnimation();
+            });
+
+            this.ProjectilesPool.fireProjectile(this);
+
+            this.lastLaunchTime = this.scene.time.now;
+        });
     }
 
     initEvents() {
@@ -75,13 +116,19 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             return;
         }
 
+        if (this.isLaunchAnimationPlaying) {
+            return;
+        }
+
+
+
+
+
         this.handleNormalMovement();
         this.handleAnimation();
         this.handleJump();
 
-        // if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
-        //     this.attack();
-        // }
+
 
         if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
             if (this.body.onFloor()) {
@@ -102,6 +149,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.previousVelocityY = this.body.velocity.y;
 
+    }
+
+    isInLaunchCoolDown() {
+        const currentTime = this.scene.time.now;
+        return (currentTime - this.lastLaunchTime) < this.launchCoolDown;
     }
 
 
@@ -126,7 +178,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     handleAnimation() {
+
+
         if (this.body.onFloor()) {
+
             this.jumpCount = 0;
             if (this.body.velocity.x !== 0) {
                 this.play("run", true);
@@ -153,12 +208,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     handleNormalMovement() {
+        if (this.isLaunchAnimationPlaying) { return };
         if (this.cursors.left.isDown) {
+            this.lastDirection = Phaser.Physics.Arcade.FACING_LEFT;
             this.setVelocityX(-this.playerSpeed);
             this.setOffset(55, 42);
             this.flipX = true;
         }
         else if (this.cursors.right.isDown) {
+            this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
             this.setVelocityX(this.playerSpeed);
             this.setOffset(45, 42);
             this.flipX = false;
@@ -173,13 +231,19 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.isAttacking || this.hasBeenHit) return;
         this.isAttacking = true;
 
+        this.attackBox.swing(this);
         this.setVelocityX(0);
         let attackAnim = (this.comboStep === 0) ? "attack1" : "attack2";
         this.play(attackAnim, true);
 
         this.once("animationcomplete", () => {
+
+            this.attackBox.activeAttackBox(false);
+
             this.isAttacking = false;
             this.comboStep++;
+
+
 
             if (this.comboTimer) {
                 this.comboTimer.remove();
@@ -193,9 +257,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     attackOnAir() {
         if (this.isAttacking) return;
+
+
+        this.attackBox.swing(this);
+
         this.isAttacking = true;
         this.play("attack2", true);
         this.once("animationcomplete", () => {
+            this.attackBox.activeAttackBox(false);
             this.isAttacking = false;
         });
         if (this.cursors.left.isDown) {
@@ -261,10 +330,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
 
     bounceOff() {
-        this.body.touching.right ?
-            this.setVelocityX(-this.bounceVelocity * 0.6) :
-            this.setVelocityX(this.bounceVelocity * 0.6);
-        setTimeout(() => this.setVelocityY(-this.bounceVelocity), 0);
+        // this.body.touching.right ?
+        // this.setVelocityX(-this.bounceVelocity * 0.6) :
+        // this.setVelocityX(this.bounceVelocity * 0.6);
+        //setTimeout(() => this.setVelocityY(-this.bounceVelocity ), 0);
+        this.setVelocityY(-this.bounceVelocity * 1.5);
 
     }
     //player takes hit 
@@ -277,6 +347,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.bounceOff();
         this.play("takesHit", true);
         const damgeAnimation = this.playDamageTween();
+
+        this.health -= initiator.damage;
+        this.hp.decrease(this.health);
 
         //reset animation
         this.once("animationcomplete", () => {
