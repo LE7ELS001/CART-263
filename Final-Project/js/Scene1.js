@@ -68,7 +68,7 @@ class Scene1 extends Phaser.Scene {
         });
 
         //debug
-        this.physics.world.createDebugGraphic();
+        //this.physics.world.createDebugGraphic();
 
 
         //camera 

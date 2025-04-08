@@ -82,11 +82,11 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.currentDistance = 0;
         }
 
-        this.rayGraphics.clear();
-        this.rayGraphics.lineStyle(2, 0xff0000);
-        this.rayGraphics.strokeLineShape(ray.edgeLine);
-        this.rayGraphics.lineStyle(2, 0x0000ff);
-        this.rayGraphics.strokeLineShape(ray.wallLine);
+        // this.rayGraphics.clear();
+        // this.rayGraphics.lineStyle(2, 0xff0000);
+        // this.rayGraphics.strokeLineShape(ray.edgeLine);
+        // this.rayGraphics.lineStyle(2, 0x0000ff);
+        // this.rayGraphics.strokeLineShape(ray.wallLine);
     }
 
     setPlatformColliders(platformColliders) {

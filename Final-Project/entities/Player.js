@@ -154,6 +154,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     increaseMaxHealth(amount) {
+        this.maxHealth += amount;
+        this.health = this.maxHealth;
         this.hp.increaseMaxHealth(amount);
     }
 

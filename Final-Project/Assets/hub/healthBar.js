@@ -23,9 +23,11 @@ class HealthBar {
     increaseMaxHealth(amount) {
         this.maxHealth += amount;
         this.value = this.maxHealth;
-        this.pixelperHealth = this.size.width / this.maxHealth;
-        //this.size.width = this.size.width + amount * this.pixelperhealth
-        this.size.width = this.maxHealth * this.pixelperHealth;
+        console.log('active')
+        this.size.width = this.size.width + amount * this.pixelperhealth
+        this.pixelperhealth = this.size.width / this.maxHealth;
+        console.log(this.value);
+        //this.size.width = this.maxHealth * this.pixelperhealth;
         this.draw(this.x, this.y, this.scale);
     }
 
@@ -38,7 +40,9 @@ class HealthBar {
             this.value = amount;
         }
 
-        //this.value = amount;
+        this.value = amount;
+        console.log("------------------");
+        console.log(this.value);
         this.draw(this.x, this.y, this.scale);
     }
 
@@ -69,7 +73,7 @@ class HealthBar {
         );
 
         const healthWidth = Math.floor(this.value * this.pixelperhealth);
-        console.log(healthWidth)
+        //console.log(healthWidth)
 
         if (healthWidth <= this.size.width / 3) {
             this.bar.fillStyle(0xFF0000);

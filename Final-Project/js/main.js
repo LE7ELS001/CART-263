@@ -24,7 +24,7 @@ let config = {
     },
     parent: 'game-container',
     physics: {
-        debug: true,
+        debug: false,
         default: 'arcade',
     },
 
