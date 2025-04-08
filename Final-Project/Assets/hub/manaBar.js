@@ -1,47 +1,45 @@
-class HealthBar {
-    constructor(scene, x, y, scale = 1, health) {
+class manaBar {
+    constructor(scene, x, y, scale = 1, mana) {
         this.bar = new Phaser.GameObjects.Graphics(scene);
 
 
         this.x = x / scale;
         this.y = y / scale;
         this.scale = scale;
-        this.maxHealth = health;
-        this.value = health;
+        this.maxMana = mana;
+        this.currentMana = this.maxMana;
 
         this.size = {
             width: 90,
             height: 10,
         }
 
-        this.pixelperhealth = this.size.width / this.maxHealth;
+        this.pixelperMana = this.size.width / this.maxHealth;
 
         scene.add.existing(this.bar);
         this.draw(this.x, this.y, this.scale);
     }
 
-    increaseMaxHealth(amount) {
-        this.maxHealth += amount;
-        this.value = this.maxHealth;
+    increaseMaxMana(amount) {
+        this.maxMana += amount;
+        this.currentMana = this.maxMana;
         console.log('active')
-        this.size.width = this.size.width + amount * this.pixelperhealth
-        this.pixelperhealth = this.size.width / this.maxHealth;
-        console.log(this.value);
-        //this.size.width = this.maxHealth * this.pixelperhealth;
+        this.size.width = this.size.width + amount * this.pixelperMana
+        this.pixelperMana = this.size.width / this.maxMana;
         this.draw(this.x, this.y, this.scale);
     }
 
 
     decrease(amount) {
+        console.log('active');
         if (amount <= 0) {
-            this.value = 0;
+            this.currentMana = 0;
         }
         else {
-            this.value = amount;
+            this.currentMana = amount;
         }
 
-        this.value = amount;
-
+        //this.currentMana = amount;
         this.draw(this.x, this.y, this.scale);
     }
 
@@ -62,7 +60,7 @@ class HealthBar {
             height + margin * 2
         );
 
-        this.bar.fillStyle(0xFFFFFF)
+        this.bar.fillStyle(0x00c9ed)
         //this.bar.fillRect(x + margin, y + margin, width - margin, height - margin);
         this.bar.fillRect(
             x,
@@ -71,22 +69,22 @@ class HealthBar {
             height
         );
 
-        const healthWidth = Math.floor(this.value * this.pixelperhealth);
+        const manaWidth = Math.floor(this.currentMana * this.pixelperMana);
         //console.log(healthWidth)
 
-        if (healthWidth <= this.size.width / 3) {
+        if (manaWidth <= this.size.width / 3) {
             this.bar.fillStyle(0xFF0000);
         }
         else {
             this.bar.fillStyle(0x00CC00);
         }
 
-        if (healthWidth > 0) {
+        if (manaWidth > 0) {
             //this.bar.fillRect(x + margin, y + margin, healthWidth - margin, height - margin);
             this.bar.fillRect(
                 x,
                 y,
-                healthWidth,
+                manaWidth,
                 height
             );
         }
@@ -98,4 +96,4 @@ class HealthBar {
 
 }
 
-window.HealthBar = HealthBar;
+window.manaBar = manaBar;

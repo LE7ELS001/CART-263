@@ -63,10 +63,20 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.maxHealth = 100;
         this.health = this.maxHealth;
 
+        //player mana
+        this.maxMana = 100;
+        this.currentMana = this.maxMana;
+        this.manaCost = 25;
+
 
         //create health bar 
         const gameConfig = this.scene.registry.get("gameConfig");
         this.hp = new HealthBar(this.scene, gameConfig.leftTopCorner.x + 25, gameConfig.leftTopCorner.y + 10, 1.32, this.health);
+
+
+        //create mana bar 
+        this.mana = new manaBar(this.scene, gameConfig.leftTopCorner.x + 25, gameConfig.leftTopCorner.y + 27, 1.32, this.currentMana)
+
 
         //player physics
         this.body.setGravityY(this.gravity);
@@ -92,12 +102,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             }
 
             this.isLaunchAnimationPlaying = true;
+
             this.play("launch", true);
             //console.log(this.scene.anims.exists('launch'));
+            this.currentMana -= this.manaCost;
+            this.mana.decrease(this.currentMana);
+
+
             this.once("animationcomplete", () => {
                 this.isLaunchAnimationPlaying = false;
                 this.handleAnimation();
-                this.resetState();
             });
 
             this.ProjectilesPool.fireProjectile(this, 0, 30);
@@ -157,6 +171,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.maxHealth += amount;
         this.health = this.maxHealth;
         this.hp.increaseMaxHealth(amount);
+    }
+
+    increaseMaxMana(amount) {
+        this.maxMana += amount;
+        this.mana = this.maxMana;
+        this.mana.increaseMaxMana(amount);
     }
 
     isInLaunchCoolDown() {
