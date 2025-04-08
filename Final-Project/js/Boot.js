@@ -71,6 +71,21 @@ class Boot extends Phaser.Scene {
             endFrame: 2
         });
 
+        this.load.spritesheet("avatar-crouchDown", "Assets/Character/Player/_CrouchAll.png", {
+            frameWidth: 120,
+            frameHeight: 80,
+            spacing: 0,
+            endFrame: 1
+        });
+
+        this.load.spritesheet("avatar-up", "Assets/Character/Player/_CrouchAll.png", {
+            frameWidth: 120,
+            frameHeight: 80,
+            spacing: 0,
+            startFrame: 1,
+            endFrame: 2
+        });
+
         this.load.image("avatar-takesHit", "Assets/Character/Player/_Hit.png");
 
         /**
@@ -120,6 +135,8 @@ class Boot extends Phaser.Scene {
 
         this.load.image("Test-tile", "Assets/Tiles/Forest/Tiles.png");
 
+        //load collectables 
+        this.load.image('redDiamond', "Assets/collectables/red_diamond.png");
 
         //load player projectile 
         this.load.spritesheet("player_Projectile", "Assets/Effect/Projectile/Player_projectile1.png", {

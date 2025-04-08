@@ -60,7 +60,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.attackBox = new AttackBox(this.scene, 0, 0, "attack-box", this.damage);
 
         //player health 
-        this.health = 100;
+        this.maxHealth = 100;
+        this.health = this.maxHealth;
 
 
         //create health bar 
@@ -96,6 +97,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.once("animationcomplete", () => {
                 this.isLaunchAnimationPlaying = false;
                 this.handleAnimation();
+                this.resetState();
             });
 
             this.ProjectilesPool.fireProjectile(this, 0, 30);
@@ -149,6 +151,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.previousVelocityY = this.body.velocity.y;
 
+    }
+
+    increaseMaxHealth(amount) {
+        this.hp.increaseMaxHealth(amount);
     }
 
     isInLaunchCoolDown() {
@@ -309,7 +315,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this.anims.play("idle", true);
             }
 
-            this.scene.time.delayedCall(3000, () => {
+            // this.scene.time.delayedCall(3000, () => {
+            //     this.rollCooldown = false; // cd 3 sec
+            // });
+
+            this.scene.time.delayedCall(300, () => {
                 this.rollCooldown = false; // cd 3 sec
             });
         });
@@ -364,6 +374,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         });
 
 
+    }
+
+    //updateHealth bar 
+    updateHealthBar(amount) {
+        this.hp.decrease(amount);
     }
 
     //reset any animation in case error

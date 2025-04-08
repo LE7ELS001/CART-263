@@ -51,11 +51,11 @@ class Enemy_projectile extends Phaser.Physics.Arcade.Sprite {
 
         this.anims.stop();
         this.play(this.key, true);
-        this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-            if (!this.isUsed) {
-                this.cleanupProjectile();
-            }
-        });
+        // this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+        //     if (!this.isUsed) {
+        //         this.cleanupProjectile();
+        //     }
+        // });
         this.setVelocityX(this.speed);
     }
 

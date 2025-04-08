@@ -108,6 +108,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
             tween.on('complete', () => {
                 // this.effectManager.playEffectOn("enemyDead", this);
                 this.playDeathAnimation();
+                this.setActive(false);
                 this.setVisible(false);
                 this.body.checkCollision.none = true;
                 console.log('enemy is dead');

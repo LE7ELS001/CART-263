@@ -27,6 +27,8 @@ class Mushroom extends Enemy {
         this.adjustSizeOnFlip();
         super.update(time, delta);
 
+
+        if (!this.active) { return; }
         if (this.timeFromLastShot + this.attackDelay <= time) {
             this.projectilePool.fireProjectile(this);
 
@@ -34,7 +36,6 @@ class Mushroom extends Enemy {
             this.attackDelay = this.getAttackDelay();
         }
 
-        if (!this.active) { return; }
         if (this.Speed === 0) {
 
             this.play("MushroomIdle", true);
@@ -69,6 +70,10 @@ class Mushroom extends Enemy {
 
     getAttackDelay() {
         return Phaser.Math.Between(1000, 4000);
+    }
+
+    isDead() {
+        return !this.active || this.health <= 0;
     }
 
 }

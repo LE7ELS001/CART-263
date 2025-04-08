@@ -16,7 +16,7 @@ function MushRoomAnims(anims) {
             key: "mushroomProjectile",
             frames: anims.generateFrameNumbers("mushroom_Projectile", {
                 start: 0,
-                end: 6
+                end: 3
             }),
             frameRate: 8,
             repeat: 0

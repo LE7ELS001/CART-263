@@ -30,6 +30,9 @@ class Scene1 extends Phaser.Scene {
         //create layers
         const layers = this.createLayers(map);
 
+        //create collectables 
+        const collectables = this.createCollectables(layers.collectables);
+
         //get playerZones
         const playerZones = this.getPlayerZones(layers.playerZones);
 
@@ -49,6 +52,7 @@ class Scene1 extends Phaser.Scene {
         //set player collider
         player.addCollider(layers.platformCollider);
         player.addCollider(enemies.getProjectiles(), this.onWeaponHit);
+        player.addOverlap(collectables, this.onCollect);
 
 
 
@@ -64,7 +68,7 @@ class Scene1 extends Phaser.Scene {
         });
 
         //debug
-        // this.physics.world.createDebugGraphic();
+        this.physics.world.createDebugGraphic();
 
 
         //camera 
@@ -89,31 +93,21 @@ class Scene1 extends Phaser.Scene {
 
     }
 
+    onCollect(entity, collectable) {
+        collectable.disableBody(true, true);
+
+        if (entity.health && entity.maxHealth && entity.hp) {
+
+            entity.increaseMaxHealth(30);
+
+
+        }
+
+    }
+
     onPlayerCollision(player, enemy) {
         player.takesHit(enemy);
     }
-
-
-    // finishDrawing(pointer, layer) {
-    //     this.line.x2 = pointer.worldX;
-    //     this.line.y2 = pointer.worldY;
-    //     this.graphics.clear();
-    //     this.graphics.strokeLineShape(this.line);
-
-    //     this.tileHits = layer.getTilesWithinShape(this.line);
-    //     if (this.tileHits.length > 0) {
-    //         this.tileHits.forEach(tile => {
-    //             if (tile.index !== -1) {
-    //                 tile.setCollision(true);
-    //             }
-    //         })
-    //     }
-
-    //     this.drawDebug(layer);
-    //     this.drawLineOrNo = false;
-
-
-    // }
 
 
 
@@ -133,11 +127,31 @@ class Scene1 extends Phaser.Scene {
         const environment = map.createLayer('Environment', tileset);
         const playerZones = map.getObjectLayer('Player_zones');
         const enemySpawns = map.getObjectLayer('Enemy_spawns')
+        const collectables = map.getObjectLayer('Collectables');
 
         platformCollider.setCollisionByExclusion(-1, true);
 
 
-        return { tree, platforms, platforms2, environment, platformCollider, playerZones, enemySpawns };
+        return {
+            tree,
+            platforms,
+            platforms2,
+            environment,
+            platformCollider,
+            playerZones,
+            enemySpawns,
+            collectables
+        };
+    }
+
+    createCollectables(collectablesLayer) {
+        const collectables = this.physics.add.staticGroup();
+
+        collectablesLayer.objects.forEach(collectable => {
+            collectables.get(collectable.x, collectable.y, 'redDiamond').setDepth(-1).setScale(1.5);
+        })
+
+        return collectables;
     }
 
     createPlayer(start) {
