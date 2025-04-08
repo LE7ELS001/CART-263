@@ -40,15 +40,17 @@ class Scene1 extends Phaser.Scene {
         // create an end zone 
         this.createEndOfLevel(playerZones.end, player);
 
-        //create Boards
+        //create enemies
         const enemies = this.createEnemies(layers.enemySpawns, layers.platformCollider);
 
 
 
 
         //set player collider
-        player.addCollider(layers.platformCollider, (player, platorm) => {
-        });
+        player.addCollider(layers.platformCollider);
+        player.addCollider(enemies.getProjectiles(), this.onWeaponHit);
+
+
 
 
         // set enemy collider
@@ -62,7 +64,7 @@ class Scene1 extends Phaser.Scene {
         });
 
         //debug
-        this.physics.world.createDebugGraphic();
+        // this.physics.world.createDebugGraphic();
 
 
         //camera 

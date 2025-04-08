@@ -6,22 +6,21 @@ class Mushroom extends Enemy {
         super(scene, x, y, 'MushroomRun');
 
         MushRoomAnims(scene.anims);
+        this.init();
 
-        this.projectileWidth = 60;
-        this.projectileHeight = 35;
-        this.setSize(this.projectileWidth, this.projectileHeight); // 设置碰撞盒大小
-        this.setOffset(-this.projectileWidth / 2, -this.projectileHeight / 2);
 
     }
 
     init() {
         super.init();
+
         this.Speed = 55;
         this.maxMoveDistance = 200;
-
+        this.damage = 25;
         this.projectilePool = new ProjectilesPool(this.scene, "mushroomProjectile");
         this.timeFromLastShot = 0;
         this.attackDelay = this.getAttackDelay();
+        this.lastDirection = null;
     }
 
     update(time, delta) {
@@ -44,13 +43,19 @@ class Mushroom extends Enemy {
             this.play("MushroomRun", true);
         }
 
+        if (this.body.velocity.x > 0) {
+            this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
+        }
+        else {
+            this.lastDirection = Phaser.Physics.Arcade.FACING_LEFT;
+        }
+
         this.flipX = this.Speed < 0;
 
     }
 
 
     adjustSizeOnFlip() {
-
         if (this.flipX) {
             this.setSize(15, 36);
             this.setOffset(67, 2);

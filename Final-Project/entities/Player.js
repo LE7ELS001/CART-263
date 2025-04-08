@@ -98,7 +98,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this.handleAnimation();
             });
 
-            this.ProjectilesPool.fireProjectile(this);
+            this.ProjectilesPool.fireProjectile(this, 0, 30);
 
             this.lastLaunchTime = this.scene.time.now;
         });
@@ -338,7 +338,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     }
     //player takes hit 
-    takesHit(initiator) {
+    takesHit(source) {
 
         if (this.hasBeenHit || this.isRolling) { return; }
         this.hasBeenHit = true;
@@ -348,8 +348,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.play("takesHit", true);
         const damgeAnimation = this.playDamageTween();
 
-        this.health -= initiator.damage;
+        this.health -= source.damage;
         this.hp.decrease(this.health);
+        source.deliverHit(this);
 
         //reset animation
         this.once("animationcomplete", () => {

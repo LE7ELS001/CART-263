@@ -36,12 +36,12 @@ class ProjectilesPool extends Phaser.Physics.Arcade.Group {
     }
 
 
-    fireProjectile(initiator) {
+    fireProjectile(initiator, x = 0, y = 0) {
         const projectile = this.getFirstDead(false);
 
         const center = initiator.getCenter();
-        let centerX;
-        let centerY = center.y + 30;
+        let centerX = center.x + x;
+        let centerY = center.y + y;
 
         if (!projectile) {
             return;
@@ -65,7 +65,6 @@ class ProjectilesPool extends Phaser.Physics.Arcade.Group {
 
         }
 
-        // projectile.fire(initiator.x, initiator.y);
         projectile.fire(centerX, centerY);
         this.timeFromLastShoot = getTimeStamp();
 

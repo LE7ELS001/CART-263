@@ -6,18 +6,25 @@ class Enemy_projectile extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        this.speed = 400;
+        this.speed = 250;
         this.maxDistance = 550;
         this.traveledDistance = 0;
         this.key = key;
-        this.damage = 50;
+        this.damage = 30;
         this.coolDown = 1000;
-        this.projectileWdith = 60;
-        this.projectileHeight = 35;
+        this.projectileWdith = 50;
+        this.projectileHeight = 50;
+        this.isUsed = false;
 
-        this.setScale(1.5);
-        this.setSize(this.projectileWidth, this.projectileHeight); // 设置碰撞盒大小
-        //this.setOffset(-this.projectileWidth / 2, -this.projectileHeight / 2);
+
+        switch (key) {
+            case 'mushroomProjectile':
+                this.setSize(10, 10);
+                this.setOffset(19, 21);
+                this.setScale(2.5);
+                this.setOrigin(0.5, 0.5);
+                break;
+        }
 
 
         this.effectManager = new effectManager(this.scene);
@@ -38,18 +45,25 @@ class Enemy_projectile extends Phaser.Physics.Arcade.Sprite {
     }
 
     fire(x, y) {
-        //this.setDisplaySize(this.projectileWdith, this.projectileHeight);
+        this.isUsed = false;
         this.activeProjectile(true);
         this.body.reset(x, y);
-        //this.play("playerProjectile", true);
+
+        this.anims.stop();
         this.play(this.key, true);
+        this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+            if (!this.isUsed) {
+                this.cleanupProjectile();
+            }
+        });
         this.setVelocityX(this.speed);
     }
 
     deliverHit(target) {
-        this.activeProjectile(false);
-        this.traveledDistance = 0;
-        this.body.reset(0, 0);
+        if (!this.isUsed) {
+
+            this.cleanupProjectile();
+        }
         //this.effectManager.playEffectOn("enemyDead", target);
 
 
@@ -65,6 +79,13 @@ class Enemy_projectile extends Phaser.Physics.Arcade.Sprite {
     isOutOfRange() {
         return this.traveledDistance &&
             this.traveledDistance >= this.maxDistance;
+    }
+
+    cleanupProjectile() {
+        this.isUsed = true;
+        this.activeProjectile(false);
+        this.traveledDistance = 0;
+        this.body.reset(0, 0);
     }
 }
 
