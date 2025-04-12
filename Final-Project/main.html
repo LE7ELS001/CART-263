@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <title>RPG-Style Menu</title>
+  <title>Start Menu</title>
   <style>
     @font-face {
       font-family: 'PixelFont';
-      src: url('https://unpkg.com/pressstart2p-webfont@1.0.0/PressStart2P-Regular.woff2') format('woff2');
+      src: url('https://fonts.cdnfonts.com/s/24530/PressStart2P-Regular.woff') format('woff');
     }
 
-    html,
-    body {
+    html, body {
       height: 100%;
       margin: 0;
       padding: 0;
@@ -27,10 +25,20 @@
       background-color: black;
     }
 
+   
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
     #container {
       width: 800px;
       height: 600px;
-      background-image: url('assets/Pictures/startbackground.png');
+      background-image: url('Assets/Pictures/startbackground.png');
       background-size: cover;
       background-position: center;
       display: flex;
@@ -41,6 +49,7 @@
       text-align: center;
       box-sizing: border-box;
       outline: none;
+      animation: fadeIn 1s ease; 
     }
 
     .menu-item {
@@ -49,8 +58,7 @@
       font-size: 20px;
     }
 
-    .menu-item.selected,
-    .menu-item:hover {
+    .menu-item.selected, .menu-item:hover {
       color: yellow;
     }
 
@@ -58,17 +66,24 @@
       margin-top: 30px;
       white-space: pre-line;
       font-size: 14px;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0,0,0,0.7);
       padding: 15px;
       border: 1px solid white;
     }
   </style>
 </head>
-
 <body>
-  <audio autoplay loop volume="0.5">
-    <source src="assets/Music/startmusic.mp3" type="audio/mpeg">
+  <!-- Background Music -->
+  <audio id="bg-music" loop>
+    <source src="Assets/Music/startmusic.mp3" type="audio/mpeg">
+    Your browser does not support the audio tag.
   </audio>
+
+  <!-- Switch sound -->
+  <audio id="switch-sound" src="Assets/Audio/switch.mp3"></audio>
+
+  <!-- Confirm sound -->
+  <audio id="confirm-sound" src="Assets/Audio/confirm.mp3"></audio>
 
   <div id="container">
     <div id="menu">
@@ -85,16 +100,44 @@
     const infoBox = document.getElementById('info-box');
     let currentSelection = 0;
 
+    const bgMusic = document.getElementById('bg-music');
+    bgMusic.volume = 0.7;
+
+  
+    function enableMusicPlayback() {
+      if (bgMusic.paused) {
+        bgMusic.play().catch(e => console.log('Autoplay blocked:', e));
+      }
+      document.removeEventListener('click', enableMusicPlayback);
+    }
+
+    document.addEventListener('click', enableMusicPlayback);
+
     function updateMenu() {
       menuItems.forEach((item, index) => {
         item.classList.toggle('selected', index === currentSelection);
       });
+
+      const switchSound = document.getElementById('switch-sound');
+      if (switchSound) {
+        switchSound.currentTime = 0;
+        switchSound.play().catch(e => console.log('Switch sound failed:', e));
+      }
     }
 
     function executeSelection() {
       const selection = menuItems[currentSelection].innerText;
+
+      const confirmSound = document.getElementById('confirm-sound');
+      if (selection === 'Start Game' && confirmSound) {
+        confirmSound.currentTime = 0;
+        confirmSound.play().catch(e => console.log('Confirm sound failed:', e));
+      }
+
       if (selection === 'Start Game') {
-        window.location.href = 'index.html';
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 300);
       } else if (selection === 'How to Play') {
         infoBox.innerText =
           'Controls:\n' +
@@ -127,8 +170,6 @@
         executeSelection();
       });
     });
-    document.querySelector('audio').volume = 0.7;
   </script>
 </body>
-
 </html>
