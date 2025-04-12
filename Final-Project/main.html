@@ -6,7 +6,7 @@
   <style>
     @font-face {
       font-family: 'PixelFont';
-      src: url('https://fonts.cdnfonts.com/s/24530/PressStart2P-Regular.woff') format('woff');
+      src: url('https://unpkg.com/pressstart2p-webfont@1.0.0/PressStart2P-Regular.woff2') format('woff2');
     }
 
     html, body {
@@ -15,6 +15,7 @@
       padding: 0;
       background-color: black;
       font-family: 'PixelFont', monospace;
+      image-rendering: pixelated;
     }
 
     body {
@@ -61,9 +62,8 @@
   </style>
 </head>
 <body>
-  <audio autoplay loop>
-    <source src="bgm.mp3" type="audio/mpeg">
-    Your browser does not support the audio tag.
+  <audio autoplay loop volume="0.5">
+    <source src="assets/Music/startmusic.mp3" type="audio/mpeg">
   </audio>
 
   <div id="container">
@@ -123,6 +123,7 @@
         executeSelection();
       });
     });
-  </script>
+    document.querySelector('audio').volume = 0.7;
+</script>
 </body>
 </html>
