@@ -13,6 +13,7 @@ class Scene1 extends Phaser.Scene {
         //     .setDepth(-1)
         //     .setScrollFactor(0); // fix the background
 
+        
 
         //creat background
         this.background = this.add.tileSprite(0, 0, this.sys.game.config.width, this.sys.game.config.height, 'forest-bg');
@@ -21,7 +22,39 @@ class Scene1 extends Phaser.Scene {
         this.background.setScrollFactor(0); // fix the background
 
 
+        // Fade out background
+this.tweens.add({
+    targets: this.background,
+    alpha: 0.3,  
+    duration: 400,
+    ease: 'Power1'
+  });
+  
 
+  const levelText = this.add.text(400, 300, 'LEVEL 1 START', {
+    fontSize: '28px',
+    fontFamily: 'PixelFont',
+    color: '#ffffff'
+  }).setOrigin(0.5).setAlpha(0);
+  
+
+  this.tweens.add({
+    targets: levelText,
+    alpha: 1,
+    duration: 400,
+    yoyo: true,
+    hold: 800,
+    ease: 'Power1',
+    onComplete: () => {
+
+      this.tweens.add({
+        targets: this.background,
+        alpha: 1,
+        duration: 400
+      });
+    }
+  });
+  
 
 
         //create map
