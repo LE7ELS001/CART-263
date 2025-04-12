@@ -65,6 +65,8 @@ class Scene1 extends Phaser.Scene {
             });
             enemy.addCollider(this.player.ProjectilesPool, this.onWeaponHit);
             enemy.addOverlap(this.player.attackBox, this.onWeaponHit);
+
+
         });
 
         //debug
@@ -106,7 +108,8 @@ class Scene1 extends Phaser.Scene {
     }
 
     onPlayerCollision(player, enemy) {
-        player.takesHit(enemy);
+        //player.takesHit(enemy);
+        enemy.tryHitPlayer(player);
     }
 
 

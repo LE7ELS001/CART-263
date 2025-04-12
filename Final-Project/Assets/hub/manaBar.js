@@ -14,7 +14,7 @@ class manaBar {
             height: 10,
         }
 
-        this.pixelperMana = this.size.width / this.maxHealth;
+        this.pixelperMana = this.size.width / this.maxMana;
 
         scene.add.existing(this.bar);
         this.draw(this.x, this.y, this.scale);
@@ -51,8 +51,8 @@ class manaBar {
         const margin = 1;
 
         //this.bar.fillStyle(0x08f90f);
-        this.bar.fillStyle(0x000000);
         //this.bar.fillRect(x, y, width + margin, height + margin);
+        this.bar.fillStyle(0x000000);
         this.bar.fillRect(
             x - margin,
             y - margin,
@@ -60,7 +60,7 @@ class manaBar {
             height + margin * 2
         );
 
-        this.bar.fillStyle(0x00c9ed)
+        this.bar.fillStyle(0xFFFFFF)
         //this.bar.fillRect(x + margin, y + margin, width - margin, height - margin);
         this.bar.fillRect(
             x,
@@ -72,12 +72,14 @@ class manaBar {
         const manaWidth = Math.floor(this.currentMana * this.pixelperMana);
         //console.log(healthWidth)
 
-        if (manaWidth <= this.size.width / 3) {
-            this.bar.fillStyle(0xFF0000);
+        if (manaWidth <= 0.3) {
+            this.bar.fillStyle(0x003f7f);
+        } else if (manaWidth <= 0.6) {
+            this.bar.fillStyle(0x0079b5);
+        } else {
+            this.bar.fillStyle(0x00c9ed);
         }
-        else {
-            this.bar.fillStyle(0x00CC00);
-        }
+
 
         if (manaWidth > 0) {
             //this.bar.fillRect(x + margin, y + margin, healthWidth - margin, height - margin);

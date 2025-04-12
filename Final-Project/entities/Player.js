@@ -48,6 +48,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.hasBeenHit = false;
         this.bounceVelocity = 120;
 
+        //invincible key 
+        this.invincible = false;
+        this.invincibleTime = 2500;
+
+        //enemy collider 
+        this.enemyColliders = [];
+
         //projectile pool 
         this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
         this.ProjectilesPool = new ProjectilesPool(this.scene, 'playerProjectile');
@@ -96,11 +103,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         //launch projectile
         this.scene.input.keyboard.on('keydown-C', () => {
 
-            if (this.isInLaunchCoolDown()) {
-                console.log("In cool down");
+            if (
+                this.isInLaunchCoolDown() ||
+                this.hasBeenHit ||
+                this.isRolling ||
+                this.isAttacking ||
+                this.currentMana <= 0
+            ) {
+                console.log("Cannot launch: busy or in cooldown");
                 return;
             }
-
             this.isLaunchAnimationPlaying = true;
 
             this.play("launch", true);
@@ -366,7 +378,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         // this.setVelocityX(-this.bounceVelocity * 0.6) :
         // this.setVelocityX(this.bounceVelocity * 0.6);
         //setTimeout(() => this.setVelocityY(-this.bounceVelocity ), 0);
-        this.setVelocityY(-this.bounceVelocity * 1.5);
+        this.setVelocityY(-this.bounceVelocity * 2.5);
 
     }
     //player takes hit 
@@ -375,25 +387,34 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.hasBeenHit || this.isRolling) { return; }
         this.hasBeenHit = true;
         this.isAttacking = false;
+        this.isLaunchAnimationPlaying = false;
 
+
+        this.anims.stop();
         this.bounceOff();
         this.play("takesHit", true);
-        const damgeAnimation = this.playDamageTween();
+        //const damgeAnimation = this.playDamageTween();
 
         this.health -= source.damage;
         this.hp.decrease(this.health);
         source.deliverHit(this);
 
+        this.setInvincible(this.invincibleTime);
         //reset animation
         this.once("animationcomplete", () => {
             this.resetState();
         });
 
-        this.scene.time.delayedCall(1000, () => {
+        this.scene.time.delayedCall(300, () => {
             this.hasBeenHit = false;
-            damgeAnimation.stop();
-            this.alpha = 1
         });
+
+
+        // this.scene.time.delayedCall(1000, () => {
+        //     this.hasBeenHit = false;
+        //     damgeAnimation.stop();
+        //     this.alpha = 1
+        // });
 
 
     }
@@ -417,6 +438,30 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.anims.stop();
         this.play("idle");
         this.setVelocityX(0);
+    }
+
+    //set invincible 
+    setInvincible(duration = 2000) {
+        this.invincible = true;
+
+        const flashTween = this.scene.tweens.add({
+            targets: this,
+            alpha: 0.3,
+            ease: 'Linear',
+            duration: 100,
+            repeat: 4,
+            yoyo: true,
+        });
+
+        this.scene.time.delayedCall(500, () => {
+            flashTween.stop();
+            this.setAlpha(0.5);
+        });
+
+        this.scene.time.delayedCall(duration, () => {
+            this.invincible = false;
+            this.setAlpha(1);
+        });
     }
 
 
