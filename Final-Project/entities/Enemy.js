@@ -31,6 +31,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.maxMoveDistance = 100;
         this.currentDistance = 0;
         this.platformColliders = null;
+        this.isHitPlayer = false;
         this.rayGraphics = this.scene.add.graphics({ lineStyle: { width: 2, color: 0xaa00aa } });
 
         this.body.setGravityY(this.gravity);
@@ -175,6 +176,16 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
                 this.setAlpha(1);
             }
         });
+    }
+
+    tryHitPlayer(player) {
+        if (!this.isHitPlayer && !player.invincible) {
+            this.isHitPlayer = true;
+            player.takesHit(this);
+            this.scene.time.delayedCall(1000, () => {
+                this.isHitPlayer = false;
+            });
+        }
     }
 
 }

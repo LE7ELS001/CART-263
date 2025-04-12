@@ -87,6 +87,8 @@ class Enemy_projectile extends Phaser.Physics.Arcade.Sprite {
         this.traveledDistance = 0;
         this.body.reset(0, 0);
     }
+
+
 }
 
 window.Enemy_projectile = Enemy_projectile;
