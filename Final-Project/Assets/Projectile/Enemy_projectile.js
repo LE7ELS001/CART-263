@@ -21,6 +21,7 @@ class Enemy_projectile extends Phaser.Physics.Arcade.Sprite {
                 this.setOffset(19, 21);
                 this.setScale(2.5);
                 this.setOrigin(0.5, 0.5);
+                this.maxDistance = 250;
                 break;
         }
 
