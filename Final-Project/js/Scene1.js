@@ -1,9 +1,15 @@
 class Scene1 extends Phaser.Scene {
+
+    preload() {
+        this.load.audio('bgm-forest', 'Assets/Music/forest.mp3');
+      }
+      
     constructor() {
         super({
             key: 'scene1'
         });
     }
+    
 
     create() {
 
@@ -55,6 +61,13 @@ this.tweens.add({
     }
   });
   
+
+// background music
+  this.bgm = this.sound.add('bgm-forest', {
+    loop: true,
+    volume: 0.3
+  });
+  this.bgm.play();
 
 
         //create map
