@@ -1,74 +1,122 @@
 class Scene1 extends Phaser.Scene {
     constructor() {
-        super({ key: 'scene1' });
+        super({
+            key: 'scene1'
+        });
     }
 
     create() {
-        this.background = this.add.tileSprite(0, 0, this.sys.game.config.width, this.sys.game.config.height, 'forest-bg');
-        this.background.setOrigin(0, 0).setDepth(-1).setScrollFactor(0);
 
+        // //creat background
+        // this.background = this.add.image(0, 0, "forest-bg")
+        //     .setOrigin(0, 0)
+        //     .setDepth(-1)
+        //     .setScrollFactor(0); // fix the background
+
+
+        //creat background
+        this.background = this.add.tileSprite(0, 0, this.sys.game.config.width, this.sys.game.config.height, 'forest-bg');
+        this.background.setOrigin(0, 0)
+        this.background.setDepth(-1)
+        this.background.setScrollFactor(0); // fix the background
+
+
+
+
+
+        //create map
         const map = this.createMap();
+
+        //create layers
         const layers = this.createLayers(map);
+
+        //create collectables
         const collectables = this.createCollectables(layers.collectables);
+
+        //get playerZones
         const playerZones = this.getPlayerZones(layers.playerZones);
+
+        // create player
         const player = this.createPlayer(playerZones.start);
         this.player = player;
+
+        // create an end zone
         this.createEndOfLevel(playerZones.end, player);
+
+        //create enemies
         const enemies = this.createEnemies(layers.enemySpawns, layers.platformCollider);
 
-      
-        const enemyProjectiles = [];
-        enemies.getChildren().forEach(enemy => {
-            if (enemy.ProjectilesPool?.children?.entries) {
-                enemy.ProjectilesPool.children.entries.forEach(p => enemyProjectiles.push(p));
-            }
-        });
 
 
+
+        //set player collider
         player.addCollider(layers.platformCollider);
-        player.addCollider(enemies.getProjectiles(), this.onWeaponHit);
-        player.addOverlap(collectables, this.onCollect);
-
-  
-        this.physics.add.overlap(player, enemyProjectiles, (player, projectile) => {
+        player.addCollider(enemies.getProjectiles(), (player, projectile) => {
             if (projectile.tryHitPlayer) {
                 projectile.tryHitPlayer(player);
             }
         });
+        player.addOverlap(collectables, this.onCollect);
 
- 
+
+
+
+        // set enemy collider
         enemies.getChildren().forEach(enemy => {
             player.addCollider(enemy, this.onPlayerCollision);
-            enemy.addCollider(layers.platformCollider, () => {});
+            enemy.addCollider(layers.platformCollider, (enemy, platform) => {
+
+            });
             enemy.addCollider(this.player.ProjectilesPool, this.onWeaponHit);
             enemy.addOverlap(this.player.attackBox, this.onWeaponHit);
+
+
         });
 
-       
+        //debug
+        //this.physics.world.createDebugGraphic();
+
+
+        //camera
         this.setupFollowupCameraOn(player);
+
+        // this.input.on('pointerup', pointer => this.finishDrawing(pointer, layers.platforms), this)
+
     }
 
     update() {
-        const scrollX = this.cameras.main.scrollX;
-        const scrollY = this.cameras.main.scrollY;
-        this.background.tilePositionX = scrollX * 0.8;
-        this.background.tilePositionY = scrollY * 0.5;
+        const cameraScrollX = this.cameras.main.scrollX;
+        this.background.tilePositionX = cameraScrollX * 0.8;
+
+        const cameraScrollY = this.cameras.main.scrollY;
+        this.background.tilePositionY = cameraScrollY * 0.5;
+        //console.log(this.player.x, this.player.y);
     }
+
 
     onWeaponHit(entity, source) {
         entity.takesHit(source);
+
     }
 
     onCollect(entity, collectable) {
         collectable.disableBody(true, true);
+
         if (entity.health && entity.maxHealth && entity.hp) {
+
             entity.increaseMaxHealth(30);
+
+
         }
+
     }
 
     onPlayerCollision(player, enemy) {
+        //player.takesHit(enemy);
         enemy.tryHitPlayer(player);
     }
+
+
 
     createMap() {
         const map = this.make.tilemap({ key: "testMap" });
@@ -77,6 +125,7 @@ class Scene1 extends Phaser.Scene {
     }
 
     createLayers(map) {
+
         const tileset = map.getTileset('ForestTiles');
         const platformCollider = map.createLayer('Platform_collider', tileset);
         const tree = map.createLayer('Tree', tileset);
@@ -84,29 +133,46 @@ class Scene1 extends Phaser.Scene {
         const platforms2 = map.createLayer('Platforms2', tileset);
         const environment = map.createLayer('Environment', tileset);
         const playerZones = map.getObjectLayer('Player_zones');
-        const enemySpawns = map.getObjectLayer('Enemy_spawns');
+        const enemySpawns = map.getObjectLayer('Enemy_spawns')
         const collectables = map.getObjectLayer('Collectables');
+
         platformCollider.setCollisionByExclusion(-1, true);
-        return { tree, platforms, platforms2, environment, platformCollider, playerZones, enemySpawns, collectables };
+
+
+        return {
+            tree,
+            platforms,
+            platforms2,
+            environment,
+            platformCollider,
+            playerZones,
+            enemySpawns,
+            collectables
+        };
     }
 
-    createCollectables(layer) {
-        const group = this.physics.add.staticGroup();
-        layer.objects.forEach(obj => {
-            group.get(obj.x, obj.y, 'redDiamond').setDepth(-1).setScale(1.5);
-        });
-        return group;
+    createCollectables(collectablesLayer) {
+        const collectables = this.physics.add.staticGroup();
+
+        collectablesLayer.objects.forEach(collectable => {
+            collectables.get(collectable.x, collectable.y, 'redDiamond').setDepth(-1).setScale(1.5);
+        })
+
+        return collectables;
     }
 
     createPlayer(start) {
-        return new Player(this, start.x, start.y);
+
+        const player = new Player(this, start.x, start.y);
+
+        return player;
     }
 
-    createEnemies(spawnLayer, platformColliders) {
+    createEnemies(enemiesSpawnPoint, platformColliders) {
         const enemies = new Enemies();
         const enemyTypes = getEnemyTypes();
-        spawnLayer.objects.forEach(spawn => {
-            const enemy = new enemyTypes[spawn.type](this, spawn.x, spawn.y);
+        enemiesSpawnPoint.objects.forEach(spawnPoint => {
+            const enemy = new enemyTypes[spawnPoint.type](this, spawnPoint.x, spawnPoint.y);
             enemy.setPlatformColliders(platformColliders);
             enemies.add(enemy);
         });
@@ -114,235 +180,32 @@ class Scene1 extends Phaser.Scene {
     }
 
     setupFollowupCameraOn(player) {
-        const config = this.registry.get("gameConfig");
-        const { height, width, mapOffset, ZoomFactor } = config;
+        const gameConfig = this.registry.get("gameConfig");
+        const { height, width, mapOffset, ZoomFactor } = gameConfig;
         this.physics.world.setBounds(0, 0, width + mapOffset, height + 200);
         this.cameras.main.setBounds(0, 0, width + mapOffset, height + 50).setZoom(ZoomFactor);
+        //console.log(mapOffset);
         this.cameras.main.startFollow(player);
     }
 
-    getPlayerZones(layer) {
-        const zones = layer.objects;
+    getPlayerZones(playerZonesLayer) {
+        const playerZones = playerZonesLayer.objects;
         return {
-            start: zones.find(z => z.name === "Spawn_point"),
-            end: zones.find(z => z.name === "End_point")
-        };
+            start: playerZones.find(zone => zone.name === "Spawn_point"),
+            end: playerZones.find(zone => zone.name === "End_point")
+        }
     }
 
     createEndOfLevel(end, player) {
-        const endZone = this.physics.add.sprite(end.x, end.y, 'end')
-            .setAlpha(0).setSize(5, 300).setOrigin(0.5, 1);
-        const overlap = this.physics.add.overlap(player, endZone, () => {
-            overlap.active = false;
-            console.log('you touched the end zone');
-        });
+        const endOfLevel = this.physics.add.sprite(end.x, end.y, 'end').setAlpha(0).setSize(5, 300).setOrigin(0.5, 1);
+
+        const eolOverlap = this.physics.add.overlap(player, endOfLevel, () => {
+            eolOverlap.active = false;
+            console.log('you touch the end zone')
+        })
     }
+
+
 }
-
-// class Scene1 extends Phaser.Scene {
-//     constructor() {
-//         super({
-//             key: 'scene1'
-//         });
-//     }
-
-//     create() {
-
-//         // //creat background
-//         // this.background = this.add.image(0, 0, "forest-bg")
-//         //     .setOrigin(0, 0)
-//         //     .setDepth(-1)
-//         //     .setScrollFactor(0); // fix the background
-
-
-//         //creat background
-//         this.background = this.add.tileSprite(0, 0, this.sys.game.config.width, this.sys.game.config.height, 'forest-bg');
-//         this.background.setOrigin(0, 0)
-//         this.background.setDepth(-1)
-//         this.background.setScrollFactor(0); // fix the background
-
-
-
-
-
-//         //create map
-//         const map = this.createMap();
-
-//         //create layers
-//         const layers = this.createLayers(map);
-
-//         //create collectables 
-//         const collectables = this.createCollectables(layers.collectables);
-
-//         //get playerZones
-//         const playerZones = this.getPlayerZones(layers.playerZones);
-
-//         // create player 
-//         const player = this.createPlayer(playerZones.start);
-//         this.player = player;
-
-//         // create an end zone 
-//         this.createEndOfLevel(playerZones.end, player);
-
-//         //create enemies
-//         const enemies = this.createEnemies(layers.enemySpawns, layers.platformCollider);
-
-
-
-
-//         //set player collider
-//         player.addCollider(layers.platformCollider);
-//         player.addCollider(enemies.getProjectiles(), this.onWeaponHit);
-//         player.addOverlap(collectables, this.onCollect);
-
-
-
-
-//         // set enemy collider
-//         enemies.getChildren().forEach(enemy => {
-//             player.addCollider(enemy, this.onPlayerCollision);
-//             enemy.addCollider(layers.platformCollider, (enemy, platform) => {
-
-//             });
-//             enemy.addCollider(this.player.ProjectilesPool, this.onWeaponHit);
-//             enemy.addOverlap(this.player.attackBox, this.onWeaponHit);
-
-
-//         });
-
-//         //debug
-//         //this.physics.world.createDebugGraphic();
-
-
-//         //camera 
-//         this.setupFollowupCameraOn(player);
-
-//         // this.input.on('pointerup', pointer => this.finishDrawing(pointer, layers.platforms), this)
-
-//     }
-
-//     update() {
-//         const cameraScrollX = this.cameras.main.scrollX;
-//         this.background.tilePositionX = cameraScrollX * 0.8;
-
-//         const cameraScrollY = this.cameras.main.scrollY;
-//         this.background.tilePositionY = cameraScrollY * 0.5;
-//         //console.log(this.player.x, this.player.y);
-//     }
-
-
-//     onWeaponHit(entity, source) {
-//         entity.takesHit(source);
-
-//     }
-
-//     onCollect(entity, collectable) {
-//         collectable.disableBody(true, true);
-
-//         if (entity.health && entity.maxHealth && entity.hp) {
-
-//             entity.increaseMaxHealth(30);
-
-
-//         }
-
-//     }
-
-//     onPlayerCollision(player, enemy) {
-//         //player.takesHit(enemy);
-//         enemy.tryHitPlayer(player);
-//     }
-
-
-
-//     createMap() {
-//         const map = this.make.tilemap({ key: "testMap" });
-//         map.addTilesetImage("ForestTiles", "tiles-1");
-//         return map;
-//     }
-
-//     createLayers(map) {
-
-//         const tileset = map.getTileset('ForestTiles');
-//         const platformCollider = map.createLayer('Platform_collider', tileset);
-//         const tree = map.createLayer('Tree', tileset);
-//         const platforms = map.createLayer('Platforms', tileset);
-//         const platforms2 = map.createLayer('Platforms2', tileset);
-//         const environment = map.createLayer('Environment', tileset);
-//         const playerZones = map.getObjectLayer('Player_zones');
-//         const enemySpawns = map.getObjectLayer('Enemy_spawns')
-//         const collectables = map.getObjectLayer('Collectables');
-
-//         platformCollider.setCollisionByExclusion(-1, true);
-
-
-//         return {
-//             tree,
-//             platforms,
-//             platforms2,
-//             environment,
-//             platformCollider,
-//             playerZones,
-//             enemySpawns,
-//             collectables
-//         };
-//     }
-
-//     createCollectables(collectablesLayer) {
-//         const collectables = this.physics.add.staticGroup();
-
-//         collectablesLayer.objects.forEach(collectable => {
-//             collectables.get(collectable.x, collectable.y, 'redDiamond').setDepth(-1).setScale(1.5);
-//         })
-
-//         return collectables;
-//     }
-
-//     createPlayer(start) {
-
-//         const player = new Player(this, start.x, start.y);
-
-//         return player;
-//     }
-
-//     createEnemies(enemiesSpawnPoint, platformColliders) {
-//         const enemies = new Enemies();
-//         const enemyTypes = getEnemyTypes();
-//         enemiesSpawnPoint.objects.forEach(spawnPoint => {
-//             const enemy = new enemyTypes[spawnPoint.type](this, spawnPoint.x, spawnPoint.y);
-//             enemy.setPlatformColliders(platformColliders);
-//             enemies.add(enemy);
-//         });
-//         return enemies;
-//     }
-
-//     setupFollowupCameraOn(player) {
-//         const gameConfig = this.registry.get("gameConfig");
-//         const { height, width, mapOffset, ZoomFactor } = gameConfig;
-//         this.physics.world.setBounds(0, 0, width + mapOffset, height + 200);
-//         this.cameras.main.setBounds(0, 0, width + mapOffset, height + 50).setZoom(ZoomFactor);
-//         //console.log(mapOffset);
-//         this.cameras.main.startFollow(player);
-//     }
-
-//     getPlayerZones(playerZonesLayer) {
-//         const playerZones = playerZonesLayer.objects;
-//         return {
-//             start: playerZones.find(zone => zone.name === "Spawn_point"),
-//             end: playerZones.find(zone => zone.name === "End_point")
-//         }
-//     }
-
-//     createEndOfLevel(end, player) {
-//         const endOfLevel = this.physics.add.sprite(end.x, end.y, 'end').setAlpha(0).setSize(5, 300).setOrigin(0.5, 1);
-
-//         const eolOverlap = this.physics.add.overlap(player, endOfLevel, () => {
-//             eolOverlap.active = false;
-//             console.log('you touch the end zone')
-//         })
-//     }
-
-
-// }
 
 

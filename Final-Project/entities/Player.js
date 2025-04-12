@@ -395,11 +395,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.play("takesHit", true);
         //const damgeAnimation = this.playDamageTween();
 
+        this.setInvincible(this.invincibleTime);
         this.health -= source.damage;
         this.hp.decrease(this.health);
         source.deliverHit(this);
 
-        this.setInvincible(this.invincibleTime);
         //reset animation
         this.once("animationcomplete", () => {
             this.resetState();
