@@ -187,8 +187,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     increaseMaxMana(amount) {
         this.maxMana += amount;
-        this.mana = this.maxMana;
-        this.mana.increaseMaxMana(amount);
+        this.currentMana = this.maxMana;
+        this.mana.increasePlayerMaxMana(amount);
     }
 
     isInLaunchCoolDown() {
@@ -417,6 +417,28 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         // });
 
 
+    }
+
+    pickUpHealthPotion(amount) {
+        if (this.health + amount >= this.maxHealth) {
+            this.health = this.maxHealth;
+        }
+        else {
+            this.health += amount;
+        }
+        this.hp.decrease(this.health);
+
+    }
+
+    pickUpManaPotion(amount) {
+        if (this.currentMana + amount >= this.maxMana) {
+            this.currentMana = this.maxMana;
+        }
+        else {
+            this.currentMana += amount;
+        }
+        this.mana.decrease(this.currentMana);
+        console.log(this.currentMana);
     }
 
     //updateHealth bar 

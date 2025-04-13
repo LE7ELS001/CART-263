@@ -2,14 +2,14 @@ class Scene1 extends Phaser.Scene {
 
     preload() {
         this.load.audio('bgm-forest', 'Assets/Music/forest.mp3');
-      }
-      
+    }
+
     constructor() {
         super({
             key: 'scene1'
         });
     }
-    
+
 
     create() {
 
@@ -19,7 +19,7 @@ class Scene1 extends Phaser.Scene {
         //     .setDepth(-1)
         //     .setScrollFactor(0); // fix the background
 
-        
+
 
         //creat background
         this.background = this.add.tileSprite(0, 0, this.sys.game.config.width, this.sys.game.config.height, 'forest-bg');
@@ -29,45 +29,45 @@ class Scene1 extends Phaser.Scene {
 
 
         // Fade out background
-this.tweens.add({
-    targets: this.background,
-    alpha: 0.3,  
-    duration: 400,
-    ease: 'Power1'
-  });
-  
+        this.tweens.add({
+            targets: this.background,
+            alpha: 0.3,
+            duration: 400,
+            ease: 'Power1'
+        });
 
-  const levelText = this.add.text(400, 300, 'LEVEL 1 START', {
-    fontSize: '28px',
-    fontFamily: 'PixelFont',
-    color: '#ffffff'
-  }).setOrigin(0.5).setAlpha(0);
-  
 
-  this.tweens.add({
-    targets: levelText,
-    alpha: 1,
-    duration: 400,
-    yoyo: true,
-    hold: 800,
-    ease: 'Power1',
-    onComplete: () => {
+        const levelText = this.add.text(400, 300, 'LEVEL 1 START', {
+            fontSize: '28px',
+            fontFamily: 'PixelFont',
+            color: '#ffffff'
+        }).setOrigin(0.5).setAlpha(0);
 
-      this.tweens.add({
-        targets: this.background,
-        alpha: 1,
-        duration: 400
-      });
-    }
-  });
-  
 
-// background music
-  this.bgm = this.sound.add('bgm-forest', {
-    loop: true,
-    volume: 0.3
-  });
-  this.bgm.play();
+        this.tweens.add({
+            targets: levelText,
+            alpha: 1,
+            duration: 400,
+            yoyo: true,
+            hold: 800,
+            ease: 'Power1',
+            onComplete: () => {
+
+                this.tweens.add({
+                    targets: this.background,
+                    alpha: 1,
+                    duration: 400
+                });
+            }
+        });
+
+
+        // background music
+        this.bgm = this.sound.add('bgm-forest', {
+            loop: true,
+            volume: 0.3
+        });
+        this.bgm.play();
 
 
         //create map
@@ -77,7 +77,7 @@ this.tweens.add({
         const layers = this.createLayers(map);
 
         //create collectables
-        const collectables = this.createCollectables(layers.collectables);
+        const collectables = this.createCollectables(layers.collectables, upgradeCollectables, 1.5);
 
         //get playerZones
         const playerZones = this.getPlayerZones(layers.playerZones);
@@ -120,7 +120,7 @@ this.tweens.add({
         });
 
         //debug
-        //this.physics.world.createDebugGraphic();
+        this.physics.world.createDebugGraphic();
 
 
         //camera
@@ -148,11 +148,32 @@ this.tweens.add({
     onCollect(entity, collectable) {
         collectable.disableBody(true, true);
 
-        if (entity.health && entity.maxHealth && entity.hp) {
+        if (!entity) return;
+        console.log(collectable.number);
+        switch (collectable.itemName) {
+            case "redDiamond":
+                if (entity.health && entity.maxHealth && entity.hp) {
+                    entity.increaseMaxHealth(Number(collectable.number));
+                }
+                break;
 
-            entity.increaseMaxHealth(30);
+            case "blueDiamond":
+                if (entity.currentMana && entity.maxMana && entity.mana) {
+                    entity.increaseMaxMana(Number(collectable.number));
+                }
+                break;
 
+            case "redPotion":
+                if (entity.health && entity.maxHealth && entity.hp) {
+                    entity.pickUpHealthPotion(Number(collectable.number));
 
+                }
+                break;
+            case "bluePotion":
+                if (entity.currentMana && entity.maxMana && entity.mana) {
+                    entity.pickUpManaPotion(Number(collectable.number));
+                }
+                break;
         }
 
     }
@@ -197,12 +218,29 @@ this.tweens.add({
         };
     }
 
-    createCollectables(collectablesLayer) {
-        const collectables = this.physics.add.staticGroup();
+    // createCollectables(collectablesLayer) {
+    //     //const collectables = this.physics.add.staticGroup();
+    //     const collectables = new collectablesGroup(this, upgradeCollectables);
 
-        collectablesLayer.objects.forEach(collectable => {
-            collectables.get(collectable.x, collectable.y, 'redDiamond').setDepth(-1).setScale(1.5);
-        })
+    //     collectablesLayer.objects.forEach(collectable => {
+    //         const item = new upgradeCollectables(this, collectable.x, collectable.y, 'redDiamond');
+    //         item.setDepth(-1).setScale(1.5);
+    //         collectables.add(item);
+    //     })
+
+    //     return collectables;
+    // }
+
+    createCollectables(collectablesLayer, classType, scale) {
+        //const collectables = this.physics.add.staticGroup();
+        const collectables = new collectablesGroup(this, classType);
+
+        // collectablesLayer.objects.forEach(collectable => {
+        //     const item = new classType(this, collectable.x, collectable.y, name);
+        //     item.setDepth(-1).setScale(scale);
+        //     collectables.add(item);
+        // })
+        collectables.addFromLayer(collectablesLayer, classType, scale);
 
         return collectables;
     }

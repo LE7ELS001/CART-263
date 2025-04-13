@@ -131,12 +131,16 @@ class Boot extends Phaser.Scene {
         //load map tile
         this.load.tilemapTiledJSON('testMap', "Assets/Map/TestMap.json");
         this.load.image('tiles-1', 'Assets/Tiles/ForestTiles.png');
+        this.load.image('tiles-2', 'Assets/Tiles/ForestTiles2.png');
 
 
         this.load.image("Test-tile", "Assets/Tiles/Forest/Tiles.png");
 
         //load collectables 
         this.load.image('redDiamond', "Assets/collectables/red_diamond.png");
+        this.load.image('blueDiamond', "Assets/collectables/blue_diamond.png");
+        this.load.image('redPotion', "Assets/collectables/red_potion.png");
+        this.load.image('bluePotion', "Assets/collectables/blue_potion.png");
 
         //load player projectile 
         this.load.spritesheet("player_Projectile", "Assets/Effect/Projectile/Player_projectile1.png", {
