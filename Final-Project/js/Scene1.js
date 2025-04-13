@@ -103,6 +103,7 @@ class Scene1 extends Phaser.Scene {
             }
         });
         player.addOverlap(collectables, this.onCollect);
+        player.addOverlap(layers.traps, this.onTrapsHit);
 
 
 
@@ -113,20 +114,26 @@ class Scene1 extends Phaser.Scene {
             enemy.addCollider(layers.platformCollider, (enemy, platform) => {
 
             });
-            enemy.addCollider(this.player.ProjectilesPool, this.onWeaponHit);
-            enemy.addOverlap(this.player.attackBox, this.onWeaponHit);
+            enemy.addCollider(this.player.ProjectilesPool, this.onHit);
+            enemy.addOverlap(this.player.attackBox, this.onHit);
 
 
         });
 
         //debug
         this.physics.world.createDebugGraphic();
+        // const debugGraphics = this.add.graphics().setAlpha(0.7);
+        // layers.traps.renderDebug(debugGraphics, {
+        //     tileColor: null,
+        //     collidingTileColor: new Phaser.Display.Color(255, 0, 0, 255), // 红色高亮
+        //     faceColor: new Phaser.Display.Color(0, 255, 0, 255) // 绿色边缘
+        // });
 
 
         //camera
         this.setupFollowupCameraOn(player);
 
-        // this.input.on('pointerup', pointer => this.finishDrawing(pointer, layers.platforms), this)
+
 
     }
 
@@ -140,7 +147,7 @@ class Scene1 extends Phaser.Scene {
     }
 
 
-    onWeaponHit(entity, source) {
+    onHit(entity, source) {
         entity.takesHit(source);
 
     }
@@ -188,12 +195,15 @@ class Scene1 extends Phaser.Scene {
     createMap() {
         const map = this.make.tilemap({ key: "testMap" });
         map.addTilesetImage("ForestTiles", "tiles-1");
+        map.addTilesetImage("ForestTiles2", "tiles-2");
         return map;
     }
 
     createLayers(map) {
 
         const tileset = map.getTileset('ForestTiles');
+        const tileset2 = map.getTileset('ForestTiles2');
+        const traps = map.createLayer('traps', tileset2);
         const platformCollider = map.createLayer('Platform_collider', tileset);
         const tree = map.createLayer('Tree', tileset);
         const platforms = map.createLayer('Platforms', tileset);
@@ -203,7 +213,13 @@ class Scene1 extends Phaser.Scene {
         const enemySpawns = map.getObjectLayer('Enemy_spawns')
         const collectables = map.getObjectLayer('Collectables');
 
+
         platformCollider.setCollisionByExclusion(-1, true);
+        traps.setCollisionByProperty({ isTrap: true }, true);
+
+
+
+
 
 
         return {
@@ -214,7 +230,8 @@ class Scene1 extends Phaser.Scene {
             platformCollider,
             playerZones,
             enemySpawns,
-            collectables
+            collectables,
+            traps,
         };
     }
 
@@ -287,6 +304,15 @@ class Scene1 extends Phaser.Scene {
             eolOverlap.active = false;
             console.log('you touch the end zone')
         })
+    }
+
+    onTrapsHit(entity, source) {
+        if (source && source.properties.isTrap) {
+            if (!entity.invincible) {
+
+                entity.takesHit(source);
+            }
+        }
     }
 
 
