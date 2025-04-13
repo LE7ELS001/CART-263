@@ -111,6 +111,8 @@ class Scene1 extends Phaser.Scene {
 
 
         // set enemy collider
+        this.enemyCollider = this.physics.add.collider(player, enemies, this.onPlayerCollision);
+
         enemies.getChildren().forEach(enemy => {
             player.addCollider(enemy, this.onPlayerCollision);
             enemy.addCollider(layers.platformCollider, (enemy, platform) => {
