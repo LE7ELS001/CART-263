@@ -174,6 +174,17 @@ class Boot extends Phaser.Scene {
         });
 
 
+        //audio preload
+        this.load.audio("swingsword", "Assets/Audio/swingsword.mp3");
+        this.load.audio("flying-attack-enemy", "Assets/Audio/Flying Attack_Enemy.mp3");
+        this.load.audio("heal", "Assets/Audio/heal.mp3");
+        this.load.audio("hit", "Assets/Audio/hit.mp3");
+        this.load.audio("hit2", "Assets/Audio/hit2.mp3");
+        this.load.audio("injuried", "Assets/Audio/Injuried.mp3");
+        this.load.audio("jump1", "Assets/Audio/jump1.mp3");
+        this.load.audio("jump2", "Assets/Audio/jump2.mp3");
+        this.load.audio("skill", "Assets/Audio/skill.mp3");
+
     }
 
     create() {
