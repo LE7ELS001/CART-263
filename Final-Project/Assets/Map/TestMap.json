@@ -461,8 +461,8 @@
                  "type":"",
                  "visible":true,
                  "width":14,
-                 "x":582.666666666667,
-                 "y":104.5
+                 "x":583.666666666667,
+                 "y":117
                 }, 
                 {
                  "gid":626,
@@ -475,15 +475,95 @@
                  "width":14,
                  "x":1726.25,
                  "y":251.5
+                }, 
+                {
+                 "gid":627,
+                 "height":14,
+                 "id":25,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"addNumber",
+                         "type":"string",
+                         "value":"25"
+                        }, 
+                        {
+                         "name":"itemName",
+                         "type":"string",
+                         "value":"blueDiamond"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":15,
+                 "x":266.5,
+                 "y":576.5
+                }, 
+                {
+                 "gid":628,
+                 "height":22,
+                 "id":26,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"addNumber",
+                         "type":"string",
+                         "value":"1000"
+                        }, 
+                        {
+                         "name":"itemName",
+                         "type":"string",
+                         "value":"bluePotion"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12,
+                 "x":190.5,
+                 "y":527.5
+                }, 
+                {
+                 "gid":629,
+                 "height":22,
+                 "id":27,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"addNumber",
+                         "type":"string",
+                         "value":"1000"
+                        }, 
+                        {
+                         "name":"itemName",
+                         "type":"string",
+                         "value":"redPotion"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":12,
+                 "x":557.5,
+                 "y":459.5
                 }],
          "opacity":1,
+         "properties":[
+                {
+                 "name":"addNumber",
+                 "type":"string",
+                 "value":"30"
+                }, 
+                {
+                 "name":"itemName",
+                 "type":"string",
+                 "value":"redDiamond"
+                }],
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":25,
+ "nextobjectid":28,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -525,6 +605,75 @@
                  "imagewidth":14
                 }],
          "tilewidth":14
+        }, 
+        {
+         "columns":0,
+         "firstgid":627,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"blue_diamond",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":14,
+         "tiles":[
+                {
+                 "id":0,
+                 "image":"..\/collectables\/blue_diamond.png",
+                 "imageheight":14,
+                 "imagewidth":15
+                }],
+         "tilewidth":15
+        }, 
+        {
+         "columns":0,
+         "firstgid":628,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"blue_potion",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":22,
+         "tiles":[
+                {
+                 "id":0,
+                 "image":"..\/collectables\/blue_potion.png",
+                 "imageheight":22,
+                 "imagewidth":12
+                }],
+         "tilewidth":12
+        }, 
+        {
+         "columns":0,
+         "firstgid":629,
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"red_potion",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":22,
+         "tiles":[
+                {
+                 "id":0,
+                 "image":"..\/collectables\/red_potion.png",
+                 "imageheight":22,
+                 "imagewidth":12
+                }],
+         "tilewidth":12
         }],
  "tilewidth":16,
  "type":"map",

@@ -20,7 +20,7 @@ class manaBar {
         this.draw(this.x, this.y, this.scale);
     }
 
-    increaseMaxMana(amount) {
+    increasePlayerMaxMana(amount) {
         this.maxMana += amount;
         this.currentMana = this.maxMana;
         console.log('active')
@@ -69,7 +69,7 @@ class manaBar {
             height
         );
 
-        const manaWidth = Math.floor(this.currentMana * this.pixelperMana);
+        const manaWidth = Math.round(this.currentMana * this.pixelperMana);
         //console.log(healthWidth)
 
         if (manaWidth <= 0.3) {
