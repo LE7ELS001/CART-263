@@ -10,10 +10,10 @@ class Boar extends Enemy {
     }
 
     update(time, delta) {
+        if (!this.active) { return; }
         this.adjustSizeOnFlip();
         super.update(time, delta);
 
-        if (!this.active) { return; }
         if (this.Speed === 0) {
 
             this.play("boarIdle", true);

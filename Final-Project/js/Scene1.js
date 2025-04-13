@@ -11,7 +11,7 @@ class Scene1 extends Phaser.Scene {
     }
 
 
-    create() {
+    create({ gameStatus }) {
 
         // //creat background
         // this.background = this.add.image(0, 0, "forest-bg")
@@ -89,8 +89,7 @@ class Scene1 extends Phaser.Scene {
         // create an end zone
         this.createEndOfLevel(playerZones.end, player);
 
-        //create game event 
-        this.createGameEvent();
+
         //create enemies
         const enemies = this.createEnemies(layers.enemySpawns, layers.platformCollider);
 
@@ -138,7 +137,11 @@ class Scene1 extends Phaser.Scene {
         this.setupFollowupCameraOn(player);
 
 
-
+        if (gameStatus === 'PLAYER_LOOSE') {
+            return;
+        }
+        //create game event 
+        this.createGameEvent();
     }
 
     update() {
@@ -321,7 +324,8 @@ class Scene1 extends Phaser.Scene {
 
     createGameEvent() {
         window.EventEmitter.on('PLAYER_LOOSE', () => {
-            this.scene.restart();
+            console.log("hi");
+            this.scene.restart({ gameStatus: 'PLAYER_LOOSE' });
         })
     }
 

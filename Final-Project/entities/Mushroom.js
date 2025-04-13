@@ -24,11 +24,11 @@ class Mushroom extends Enemy {
     }
 
     update(time, delta) {
+        if (!this.active) { return; }
         this.adjustSizeOnFlip();
         super.update(time, delta);
 
 
-        if (!this.active) { return; }
         if (this.timeFromLastShot + this.attackDelay <= time) {
             this.projectilePool.fireProjectile(this);
 

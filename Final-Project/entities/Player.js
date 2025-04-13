@@ -138,7 +138,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
 
     update(time, delta) {
-        if (this.hasBeenHit) { return; }
+        if (this.hasBeenHit || !this.body) { return; }
 
         if (this.isAttacking || this.isRolling) {
             return;
