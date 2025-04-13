@@ -318,46 +318,33 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     roll() {
-
         if (this.isRolling || this.isAttacking || this.rollCooldown) return;
+    
         this.isRolling = true;
         this.rollCooldown = true;
-
+    
         this.setVelocityX(this.flipX ? -200 : 200);
         this.anims.play("roll", true);
-
-
-        this.body.checkCollision.left = false;
-        this.body.checkCollision.right = false;
-        this.body.checkCollision.up = false;
-
+    
         this.setAlpha(0.7);
-
+        this.setInvincible(500); 
+    
         this.once("animationcomplete", () => {
             this.isRolling = false;
-
-
-            this.body.checkCollision.left = true;
-            this.body.checkCollision.right = true;
-            this.body.checkCollision.up = true;
-
             this.setAlpha(1);
-
+    
             if (this.body.velocity.x !== 0) {
                 this.anims.play("run", true);
             } else {
                 this.anims.play("idle", true);
             }
-
-            // this.scene.time.delayedCall(3000, () => {
-            //     this.rollCooldown = false; // cd 3 sec
-            // });
-
+    
             this.scene.time.delayedCall(300, () => {
-                this.rollCooldown = false; // cd 3 sec
+                this.rollCooldown = false;
             });
         });
     }
+    
 
     playDamageTween() {
         return this.scene.tweens.add({
