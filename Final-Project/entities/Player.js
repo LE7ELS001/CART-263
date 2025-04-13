@@ -319,32 +319,32 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     roll() {
         if (this.isRolling || this.isAttacking || this.rollCooldown) return;
-    
+
         this.isRolling = true;
         this.rollCooldown = true;
-    
+
         this.setVelocityX(this.flipX ? -200 : 200);
         this.anims.play("roll", true);
-    
+
         this.setAlpha(0.7);
-        this.setInvincible(500); 
-    
+        this.setInvincible(500);
+
         this.once("animationcomplete", () => {
             this.isRolling = false;
             this.setAlpha(1);
-    
+
             if (this.body.velocity.x !== 0) {
                 this.anims.play("run", true);
             } else {
                 this.anims.play("idle", true);
             }
-    
+
             this.scene.time.delayedCall(300, () => {
                 this.rollCooldown = false;
             });
         });
     }
-    
+
 
     playDamageTween() {
         return this.scene.tweens.add({
@@ -375,7 +375,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.hasBeenHit = true;
         this.isAttacking = false;
         this.isLaunchAnimationPlaying = false;
+        this.health -= source.damage || source.properties.damage || 0;
 
+        if (this.health <= 0) {
+            window.EventEmitter.emit('PLAYER_LOOSE');
+            return;
+        }
 
         this.anims.stop();
         this.bounceOff();
@@ -383,7 +388,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         //const damgeAnimation = this.playDamageTween();
 
         this.setInvincible(this.invincibleTime);
-        this.health -= source.damage || source.properties.damage || 0;
         this.hp.decrease(this.health);
         source.deliverHit && source.deliverHit(this);
 

@@ -89,6 +89,8 @@ class Scene1 extends Phaser.Scene {
         // create an end zone
         this.createEndOfLevel(playerZones.end, player);
 
+        //create game event 
+        this.createGameEvent();
         //create enemies
         const enemies = this.createEnemies(layers.enemySpawns, layers.platformCollider);
 
@@ -313,6 +315,12 @@ class Scene1 extends Phaser.Scene {
                 entity.takesHit(source);
             }
         }
+    }
+
+    createGameEvent() {
+        window.EventEmitter.on('PLAYER_LOOSE', () => {
+            this.scene.restart();
+        })
     }
 
 
