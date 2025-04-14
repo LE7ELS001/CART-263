@@ -136,10 +136,23 @@ class Boot extends Phaser.Scene {
 
 
         //load map tile
-        this.load.tilemapTiledJSON('testMap', "Assets/Map/TestMap.json");
+        this.load.tilemapTiledJSON('level_1', "Assets/Map/Level1.json");
+        this.load.tilemapTiledJSON('level_2', "Assets/Map/Level2.json")
         this.load.image('tiles-1', 'Assets/Tiles/ForestTiles.png');
         this.load.image('tiles-2', 'Assets/Tiles/ForestTiles2.png');
 
+        //load portal 
+        this.load.spritesheet("portal-1", "Assets/Portal/Portal_1.png", {
+            frameWidth: 32,
+            frameHeight: 32,
+            endFrame: 2
+        });
+
+        this.load.spritesheet("portal-2", "Assets/Portal/Portal_2.png", {
+            frameWidth: 32,
+            frameHeight: 32,
+            endFrame: 2
+        });
 
         this.load.image("Test-tile", "Assets/Tiles/Forest/Tiles.png");
 
@@ -180,9 +193,6 @@ class Boot extends Phaser.Scene {
         this.load.image("forest-bg", "Assets/Map/background forest.png");
 
 
-        this.load.on('complete', () => {
-            this.scene.start('scene1');
-        });
 
 
         //audio preload
@@ -196,6 +206,14 @@ class Boot extends Phaser.Scene {
         this.load.audio("jump2", "Assets/Audio/jump2.mp3");
         this.load.audio("skill", "Assets/Audio/skill.mp3");
 
+        this.load.on('complete', () => {
+            this.startGame();
+        });
+    }
+
+    startGame() {
+        this.registry.set('level', 1);
+        this.scene.start('scene1');
     }
 
     create() {

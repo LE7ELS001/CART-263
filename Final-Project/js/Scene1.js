@@ -171,7 +171,10 @@ class Scene1 extends Phaser.Scene {
                 break;
 
             case "blueDiamond":
-                if (entity.currentMana && entity.maxMana && entity.mana) {
+                if (typeof entity.currentMana === 'number' &&
+                    typeof entity.maxMana === 'number' &&
+                    entity.mana) {
+                    console.log('trigger');
                     entity.increaseMaxMana(Number(collectable.number));
                 }
                 break;
@@ -183,7 +186,9 @@ class Scene1 extends Phaser.Scene {
                 }
                 break;
             case "bluePotion":
-                if (entity.currentMana && entity.maxMana && entity.mana) {
+                if (typeof entity.currentMana === 'number' &&
+                    typeof entity.maxMana === 'number' &&
+                    entity.mana) {
                     entity.pickUpManaPotion(Number(collectable.number));
                 }
                 break;
@@ -199,10 +204,14 @@ class Scene1 extends Phaser.Scene {
 
 
     createMap() {
-        const map = this.make.tilemap({ key: "testMap" });
+        const map = this.make.tilemap({ key: `level_${this.getCurrentLevel()}` });
         map.addTilesetImage("ForestTiles", "tiles-1");
         map.addTilesetImage("ForestTiles2", "tiles-2");
         return map;
+    }
+
+    getCurrentLevel() {
+        return this.registry.get('level') || 1;
     }
 
     createLayers(map) {
@@ -298,6 +307,8 @@ class Scene1 extends Phaser.Scene {
         this.cameras.main.startFollow(player);
     }
 
+
+
     getPlayerZones(playerZonesLayer) {
         const playerZones = playerZonesLayer.objects;
         return {
@@ -307,11 +318,16 @@ class Scene1 extends Phaser.Scene {
     }
 
     createEndOfLevel(end, player) {
-        const endOfLevel = this.physics.add.sprite(end.x, end.y, 'end').setAlpha(0).setSize(5, 300).setOrigin(0.5, 1);
+        portalAnimation(this.anims);
+        const portal = this.add.sprite(end.x, end.y, `portal-${this.getCurrentLevel()}`).setOrigin(0.5, 1);
+        portal.setScale(2);
+        portal.play(`portal_${this.getCurrentLevel()}`);
+        const endOfLevel = this.physics.add.sprite(end.x, end.y, 'end').setAlpha(0).setSize(25, 60).setOrigin(0.5, 1).setOffset(5, -30);
 
         const eolOverlap = this.physics.add.overlap(player, endOfLevel, () => {
             eolOverlap.active = false;
-            console.log('you touch the end zone')
+            this.registry.inc('level', 1);
+            this.scene.restart({ gameStatus: 'LEVEL_COMPLETED' });
         })
     }
 

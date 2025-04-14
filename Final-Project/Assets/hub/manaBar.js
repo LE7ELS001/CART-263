@@ -31,7 +31,6 @@ class manaBar {
 
 
     decrease(amount) {
-        console.log('active');
         if (amount <= 0) {
             this.currentMana = 0;
         }

@@ -151,6 +151,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
 
         if (this.getBounds().top > this.gameConfig.height) {
+            //add sound effect 
             window.EventEmitter.emit('PLAYER_LOOSE');
             return;
         }
@@ -194,7 +195,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     increaseMaxMana(amount) {
         this.maxMana += amount;
+        console.log(this.maxMana);
         this.currentMana = this.maxMana;
+        console.log(this.currentMana)
         this.mana.increasePlayerMaxMana(amount);
     }
 
@@ -431,6 +434,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     pickUpManaPotion(amount) {
         if (this.currentMana + amount >= this.maxMana) {
             this.currentMana = this.maxMana;
+            console.log("111")
         }
         else {
             this.currentMana += amount;
