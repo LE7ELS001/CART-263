@@ -243,18 +243,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
         else {
             if (this.isJumpRequested) {
-                this.play("jump", true);
+                if (this.jumpCount === 0) {
+                  this.play("jump", true); 
+                } else if (this.jumpCount === 1) {
+                  this.play("jump2", true); 
+                }
                 this.isJumpRequested = false;
-            }
-            else if (this.previousVelocityY <= 0 && this.body.velocity.y > 0) {
-
-                this.play("jumpfall", true);
-            }
-            else if (this.body.velocity.y > 0) {
-
-                this.play("fall", true);
-            }
-        }
+              }
+              
+          }
+          
     }
 
     handleNormalMovement() {
