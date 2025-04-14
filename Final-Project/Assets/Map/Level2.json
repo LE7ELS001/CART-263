@@ -516,6 +516,18 @@
                  "width":0,
                  "x":1642,
                  "y":587
+                }, 
+                {
+                 "height":0,
+                 "id":34,
+                 "name":"Spawn",
+                 "point":true,
+                 "rotation":0,
+                 "type":"Mushroom",
+                 "visible":true,
+                 "width":0,
+                 "x":1901,
+                 "y":518
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -627,7 +639,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":34,
+ "nextobjectid":35,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
