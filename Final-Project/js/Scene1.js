@@ -327,6 +327,7 @@ class Scene1 extends Phaser.Scene {
     createGameEvent() {
         window.EventEmitter.on('PLAYER_LOOSE', () => {
             console.log("hi");
+            this.sound.stopAll();
             this.scene.restart({ gameStatus: 'PLAYER_LOOSE' });
         })
     }
