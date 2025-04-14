@@ -209,6 +209,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.maxHealth += amount;
         this.health = this.maxHealth;
         this.hp.increaseMaxHealth(amount);
+
+        // this.scene.registry.set('playerStats', { 
+        //     playerMaxHealth: this.maxHealth,
+        //     playerMaxMana: this.maxMana
+        // });
     }
 
     increaseMaxMana(amount) {
@@ -217,6 +222,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.currentMana = this.maxMana;
         console.log(this.currentMana)
         this.mana.increasePlayerMaxMana(amount);
+
+        // this.scene.registry.set('playerStats', { 
+        //     playerMaxHealth: this.maxHealth,
+        //     playerMaxMana: this.maxMana
+        // });
     }
 
     isInLaunchCoolDown() {
@@ -415,6 +425,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
 
         if (this.health <= 0) {
+
+            // this.registry.set('playerStats', {
+            //     playerMaxHealth: this.maxHealth,
+            //     playerMaxMana: this.maxMana
+            // })
+
             this.anims.stop();
             this.play('death', true);
             this.once('animationcomplete', () => {

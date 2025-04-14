@@ -78,31 +78,31 @@ class Scene1 extends Phaser.Scene {
             ease: 'Power1'
         });
 
-        if (this.getCurrentLevel() === 1) {
 
-            const levelText = this.add.text(playerZones.start.x + 175, playerZones.start.y - 50, `LEVEL ${this.getCurrentLevel()}`, {
-                fontSize: '80px',
-                fontFamily: 'PixelFont',
-                color: '#ffffff'
-            }).setOrigin(0.5).setAlpha(0).setDepth(10);
 
-            this.tweens.add({
-                targets: levelText,
-                alpha: 1,
-                duration: 400,
-                yoyo: true,
-                hold: 800,
-                ease: 'Power1',
-                onComplete: () => {
+        const levelText = this.add.text(playerZones.start.x + 175, playerZones.start.y - 50, `LEVEL ${this.getCurrentLevel()}`, {
+            fontSize: '80px',
+            fontFamily: 'PixelFont',
+            color: '#ffffff'
+        }).setOrigin(0.5).setAlpha(0).setDepth(10);
 
-                    this.tweens.add({
-                        targets: this.background,
-                        alpha: 1,
-                        duration: 400
-                    });
-                }
-            });
-        }
+        this.tweens.add({
+            targets: levelText,
+            alpha: 1,
+            duration: 400,
+            yoyo: true,
+            hold: 800,
+            ease: 'Power1',
+            onComplete: () => {
+
+                this.tweens.add({
+                    targets: this.background,
+                    alpha: 1,
+                    duration: 400
+                });
+            }
+        });
+
 
 
 
@@ -313,11 +313,17 @@ class Scene1 extends Phaser.Scene {
 
     createPlayer(start) {
 
+        //first time load 
+        // const savedStats = this.registry.get('playerStats') || {};
         const player = new Player(this, start.x, start.y);
-        if (this.getCurrentLevel() === 1) {
 
-        }
+        // player.maxHealth = savedStats.playerMaxHealth || 100;
+        // player.health = player.maxHealth;
 
+        // player.maxMana = savedStats.playerMaxMana || 100;
+        // player.currentMana = player.maxMana;
+
+        // console.log('playerHP ', player.maxHealth, player.health)
         return player;
     }
 
@@ -359,7 +365,9 @@ class Scene1 extends Phaser.Scene {
         portal.play(`portal_${this.getCurrentLevel()}`);
         const endOfLevel = this.physics.add.sprite(end.x, end.y, 'end').setAlpha(0).setSize(25, 60).setOrigin(0.5, 1).setOffset(5, -30);
 
+
         const eolOverlap = this.physics.add.overlap(player, endOfLevel, () => {
+            //this.savePlayerData();
             eolOverlap.active = false;
             if (this.getCurrentLevel() === 1) {
 
@@ -391,6 +399,16 @@ class Scene1 extends Phaser.Scene {
     playBgMusic() {
         if (this.sound.get('bgm-forest')) { return; }
         this.sound.add('bgm-forest', { loop: true, volumn: 0.5 }).play();
+    }
+
+    savePlayerData() {
+        if (this.player) {
+            this.registry.set('playerStats', {
+                playerMaxHealth: this.player.maxHealth,
+                playerMaxMana: this.player.maxMana
+            });
+        }
+
     }
 
 }

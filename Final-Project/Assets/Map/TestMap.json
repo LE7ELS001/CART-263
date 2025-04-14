@@ -345,7 +345,7 @@
                  "type":"Boar",
                  "visible":true,
                  "width":0,
-                 "x":824,
+                 "x":854.666666666667,
                  "y":386.666666666667
                 }, 
                 {
@@ -357,8 +357,8 @@
                  "type":"Mushroom",
                  "visible":true,
                  "width":0,
-                 "x":1174.66666666667,
-                 "y":387.666666666667
+                 "x":1221.33333333334,
+                 "y":389
                 }, 
                 {
                  "height":0,
@@ -663,10 +663,10 @@
                 {
                  "id":0,
                  "image":"..\/collectables\/red_diamond.png",
-                 "imageheight":17,
-                 "imagewidth":14
+                 "imageheight":14,
+                 "imagewidth":15
                 }],
-         "tilewidth":14
+         "tilewidth":15
         }, 
         {
          "columns":0,
