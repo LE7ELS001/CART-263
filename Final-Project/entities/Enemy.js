@@ -34,6 +34,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.isHitPlayer = false;
         this.rayGraphics = this.scene.add.graphics({ lineStyle: { width: 2, color: 0xaa00aa } });
 
+        this.hitSound = this.scene.sound.add('hit', { volume: 0.2 });
+        this.hitSound2 = this.scene.sound.add('hit2', { volume: 0.2 });
+
         this.body.setGravityY(this.gravity);
         this.setScale(this.scale);
         // this.setSize(27, 27);
@@ -102,6 +105,10 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.health -= source.damage;
 
         const tween = this.playDamageTween();
+
+        this.hitSound2.play();
+
+
 
         if (this.health <= 0) {
             const deathX = this.x;

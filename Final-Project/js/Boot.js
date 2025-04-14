@@ -215,6 +215,10 @@ class Boot extends Phaser.Scene {
         this.load.audio("jump1", "Assets/Audio/jump1.mp3");
         this.load.audio("jump2", "Assets/Audio/jump2.mp3");
         this.load.audio("skill", "Assets/Audio/skill.mp3");
+        this.load.audio('bgm-forest', 'Assets/Music/forest.mp3');
+        this.load.audio('pickup', "Assets/Audio/coin_pickup.wav");
+        this.load.audio('stepSound', "Assets/Audio/step_mud.wav");
+
 
         this.load.on('complete', () => {
             this.startGame();

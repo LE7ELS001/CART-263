@@ -66,6 +66,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         //create attack box 
         this.attackBox = new AttackBox(this.scene, 0, 0, "attack-box", this.damage);
 
+        //sound effect 
+        this.addSoundToScene();
+
+
+
         //player health 
         this.maxHealth = 100;
         this.health = this.maxHealth;
@@ -84,6 +89,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         //create mana bar 
         this.mana = new manaBar(this.scene, gameConfig.leftTopCorner.x + 25, gameConfig.leftTopCorner.y + 27, 1.32, this.currentMana)
+
 
 
 
@@ -117,8 +123,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 return;
             }
             this.isLaunchAnimationPlaying = true;
-
             this.play("launch", true);
+            this.projectileSound.play();
             //console.log(this.scene.anims.exists('launch'));
             this.currentMana -= this.manaCost;
             this.mana.decrease(this.currentMana);
@@ -168,9 +174,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
 
 
+
         if (Phaser.Input.Keyboard.JustDown(this.attackKey) && !this.isAttacking) {
             if (this.body.onFloor()) {
-                console.log("attack");
+                //console.log("attack");
                 this.attack();
             }
             else if (!this.body.onFloor()) {
@@ -247,6 +254,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             if (this.isJumpRequested) {
                 this.play("jump", true);
                 this.jumpEffect();
+
+                this.jumpSound2.play();
+
                 this.isJumpRequested = false;
             }
             else if (this.previousVelocityY <= 0 && this.body.velocity.y > 0) {
@@ -288,6 +298,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.attackBox.swing(this);
         this.setVelocityX(0);
         let attackAnim = (this.comboStep === 0) ? "attack1" : "attack2";
+        this.swingswordSound.play();
         this.play(attackAnim, true);
 
         this.once("animationcomplete", () => {
@@ -317,6 +328,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.isAttacking = true;
         this.play("attack2", true);
+        this.swingswordSound.play();
         this.once("animationcomplete", () => {
             this.attackBox.activeAttackBox(false);
             this.isAttacking = false;
@@ -342,6 +354,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.setVelocityX(this.flipX ? -200 : 200);
         this.anims.play("roll", true);
+        this.jumpSound1.play();
         this.setAlpha(0.7);
         this.setInvincible(500);
 
@@ -399,6 +412,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.anims.stop();
         this.bounceOff();
         this.play("takesHit", true);
+        this.injuriedSound.play();
+
         //const damgeAnimation = this.playDamageTween();
 
         this.setInvincible(this.invincibleTime);
@@ -506,6 +521,25 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
 
     }
+
+
+    addSoundToScene() {
+        this.jumpSound1 = this.scene.sound.add('jump1', { volume: 0.2 });
+        this.jumpSound2 = this.scene.sound.add('jump2', { volume: 0.2 });
+        this.swingswordSound = this.scene.sound.add('swingsword', { volume: 0.2 });
+        this.flyingAttackSound = this.scene.sound.add('flying-attack-enemy', { volume: 0.2 });
+        this.hitSound = this.scene.sound.add('hit', { volume: 0.2 });
+        this.hitSound2 = this.scene.sound.add('hit2', { volume: 0.2 });
+        this.injuriedSound = this.scene.sound.add('injuried', { volume: 0.2 });
+        this.projectileSound = this.scene.sound.add('skill', { volume: 0.2 });
+
+        this.stepSound = this.scene.sound.add('stepSound', { volume: 0.2 });
+
+
+
+
+    }
+
 
 }
 

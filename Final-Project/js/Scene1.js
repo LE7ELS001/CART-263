@@ -1,9 +1,5 @@
 class Scene1 extends Phaser.Scene {
 
-    preload() {
-        this.load.audio('bgm-forest', 'Assets/Music/forest.mp3');
-    }
-
     constructor() {
         super({
             key: 'scene1'
@@ -28,46 +24,15 @@ class Scene1 extends Phaser.Scene {
         this.background.setScrollFactor(0); // fix the background
 
 
-        // Fade out background
-        this.tweens.add({
-            targets: this.background,
-            alpha: 0.3,
-            duration: 400,
-            ease: 'Power1'
-        });
 
 
-        const levelText = this.add.text(400, 300, 'LEVEL 1 START', {
-            fontSize: '28px',
-            fontFamily: 'PixelFont',
-            color: '#ffffff'
-        }).setOrigin(0.5).setAlpha(0);
 
 
-        this.tweens.add({
-            targets: levelText,
-            alpha: 1,
-            duration: 400,
-            yoyo: true,
-            hold: 800,
-            ease: 'Power1',
-            onComplete: () => {
-
-                this.tweens.add({
-                    targets: this.background,
-                    alpha: 1,
-                    duration: 400
-                });
-            }
-        });
 
 
-        // background music
-        this.bgm = this.sound.add('bgm-forest', {
-            loop: true,
-            volume: 0.3
-        });
-        this.bgm.play();
+
+
+
 
 
         //create map
@@ -104,14 +69,56 @@ class Scene1 extends Phaser.Scene {
         }
 
 
-        const bonfire = this.add.image('bonfire')
-            .setOrigin(0.5, 1)
+        //create start Effect 
+        //Fade out background
+        this.tweens.add({
+            targets: this.background,
+            alpha: 0.3,
+            duration: 400,
+            ease: 'Power1'
+        });
+
+        if (this.getCurrentLevel() === 1) {
+
+            const levelText = this.add.text(playerZones.start.x + 175, playerZones.start.y - 50, `LEVEL ${this.getCurrentLevel()}`, {
+                fontSize: '80px',
+                fontFamily: 'PixelFont',
+                color: '#ffffff'
+            }).setOrigin(0.5).setAlpha(0).setDepth(10);
+
+            this.tweens.add({
+                targets: levelText,
+                alpha: 1,
+                duration: 400,
+                yoyo: true,
+                hold: 800,
+                ease: 'Power1',
+                onComplete: () => {
+
+                    this.tweens.add({
+                        targets: this.background,
+                        alpha: 1,
+                        duration: 400
+                    });
+                }
+            });
+        }
+
+
+
+
+
 
 
         // create an end zone
         this.createEndOfLevel(playerZones.end, player);
 
 
+        //create BGM
+        this.playBgMusic();
+
+        //create soundeffect 
+        this.healSound = this.sound.add('heal', { volume: 0.2 });
         //create enemies
         const enemies = this.createEnemies(layers.enemySpawns, layers.platformCollider);
 
@@ -125,7 +132,9 @@ class Scene1 extends Phaser.Scene {
                 projectile.tryHitPlayer(player);
             }
         });
-        player.addOverlap(collectables, this.onCollect);
+        player.addOverlap(collectables, (entity, collectable) => {
+            this.onCollect(entity, collectable);
+        });
         player.addOverlap(layers.traps, this.onTrapsHit);
 
 
@@ -145,7 +154,7 @@ class Scene1 extends Phaser.Scene {
         });
 
         //debug
-        this.physics.world.createDebugGraphic();
+        //this.physics.world.createDebugGraphic();
         // const debugGraphics = this.add.graphics().setAlpha(0.7);
         // layers.traps.renderDebug(debugGraphics, {
         //     tileColor: null,
@@ -182,9 +191,9 @@ class Scene1 extends Phaser.Scene {
 
     onCollect(entity, collectable) {
         collectable.disableBody(true, true);
-
+        this.healSound.play();
+        //this.sound.play('heal', { volume: 0.2 });
         if (!entity) return;
-        console.log(collectable.number);
         switch (collectable.itemName) {
             case "redDiamond":
                 if (entity.health && entity.maxHealth && entity.hp) {
@@ -371,12 +380,15 @@ class Scene1 extends Phaser.Scene {
 
     createGameEvent() {
         window.EventEmitter.on('PLAYER_LOOSE', () => {
-            console.log("hi");
             this.sound.stopAll();
             this.scene.restart({ gameStatus: 'PLAYER_LOOSE' });
         })
     }
 
+    playBgMusic() {
+        if (this.sound.get('bgm-forest')) { return; }
+        this.sound.add('bgm-forest', { loop: true, volumn: 0.5 }).play();
+    }
 
 }
 
