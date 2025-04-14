@@ -78,6 +78,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         //create health bar 
         const gameConfig = this.scene.registry.get("gameConfig");
+        this.gameConfig = gameConfig;
         this.hp = new HealthBar(this.scene, gameConfig.leftTopCorner.x + 25, gameConfig.leftTopCorner.y + 10, 1.32, this.health);
 
 
@@ -145,6 +146,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         if (this.isLaunchAnimationPlaying) {
+            return;
+        }
+
+
+        if (this.getBounds().top > this.gameConfig.height) {
+            window.EventEmitter.emit('PLAYER_LOOSE');
             return;
         }
 

@@ -35,7 +35,7 @@ function PlayerAnimation(anims) {
         });
     }
 
-    if (!anims.exists('attack1')) {
+    if (!anims.exists('attack2')) {
 
         anims.create({
             key: "attack2",

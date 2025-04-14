@@ -223,6 +223,9 @@ class Scene1 extends Phaser.Scene {
         platformCollider.setCollisionByExclusion(-1, true);
         traps.setCollisionByProperty({ isTrap: true }, true);
 
+        //modify it if player is in front of the envrionment(water)
+        environment.setDepth(5);
+
 
 
 
