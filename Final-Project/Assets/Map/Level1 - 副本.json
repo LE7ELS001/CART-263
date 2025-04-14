@@ -591,18 +591,6 @@
                 }, 
                 {
                  "height":0,
-                 "id":16,
-                 "name":"Spawn",
-                 "point":true,
-                 "rotation":0,
-                 "type":"Boar",
-                 "visible":true,
-                 "width":0,
-                 "x":1506,
-                 "y":1227
-                }, 
-                {
-                 "height":0,
                  "id":20,
                  "name":"Spawn",
                  "point":true,

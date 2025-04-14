@@ -375,7 +375,7 @@ class Scene1 extends Phaser.Scene {
                 this.scene.restart({ gameStatus: 'LEVEL_COMPLETED' });
             }
             else if (this.getCurrentLevel() === 2) {
-                window.location.href = "main.html";
+                window.location.href = "end.html";
             }
         })
     }
