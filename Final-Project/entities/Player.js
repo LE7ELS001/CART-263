@@ -86,6 +86,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.mana = new manaBar(this.scene, gameConfig.leftTopCorner.x + 25, gameConfig.leftTopCorner.y + 27, 1.32, this.currentMana)
 
 
+
+
         //player physics
         this.body.setGravityY(this.gravity);
         this.setScale(1.5);
@@ -243,16 +245,20 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
         else {
             if (this.isJumpRequested) {
-                if (this.jumpCount === 0) {
-                  this.play("jump", true); 
-                } else if (this.jumpCount === 1) {
-                  this.play("jump2", true); 
-                }
+                this.play("jump", true);
+                this.jumpEffect();
                 this.isJumpRequested = false;
-              }
-              
-          }
-          
+            }
+            else if (this.previousVelocityY <= 0 && this.body.velocity.y > 0) {
+
+                this.play("jumpfall", true);
+            }
+            else if (this.body.velocity.y > 0) {
+
+                this.play("fall", true);
+            }
+        }
+
     }
 
     handleNormalMovement() {
@@ -486,7 +492,20 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
+    jumpEffect(jumpCount) {
+        console.log('active')
+        let effect = this.scene.add.sprite(this.x, this.y, 'wind-1');
+        effect.setOrigin(0.5, 0.5)
+            .setDepth(0)
+            .setScale(1, 0.3)
+        effect.play('wind-1');
 
+
+        effect.on('animationcomplete', () => {
+            effect.destroy();
+        })
+
+    }
 
 }
 

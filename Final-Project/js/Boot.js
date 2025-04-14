@@ -93,6 +93,13 @@ class Boot extends Phaser.Scene {
             endFrame: 11
         });
 
+        this.load.spritesheet("wind1", "Assets/Character/Player/wind.png", {
+            frameWidth: 64,
+            frameHeight: 64,
+            spacing: 0,
+            endFrame: 12
+        });
+
         this.load.image("avatar-takesHit", "Assets/Character/Player/_Hit.png");
 
         /**
@@ -140,6 +147,9 @@ class Boot extends Phaser.Scene {
         this.load.tilemapTiledJSON('level_2', "Assets/Map/Level2.json")
         this.load.image('tiles-1', 'Assets/Tiles/ForestTiles.png');
         this.load.image('tiles-2', 'Assets/Tiles/ForestTiles2.png');
+
+        //load bonfire 
+        this.load.image('bonfire', "Assets/bonfire/bonfire.png");
 
         //load portal 
         this.load.spritesheet("portal-1", "Assets/Portal/Portal_1.png", {

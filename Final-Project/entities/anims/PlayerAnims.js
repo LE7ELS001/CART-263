@@ -135,6 +135,15 @@ function PlayerAnimation(anims) {
             repeat: 0
         });
     }
+
+    if (!anims.exists('wind-1')) {
+        anims.create({
+            key: "wind-1",
+            frames: anims.generateFrameNumbers("wind1", { start: 0, end: 8 }),
+            frameRate: 15,
+            repeat: 0
+        });
+    }
 }
 
 

@@ -86,6 +86,28 @@ class Scene1 extends Phaser.Scene {
         const player = this.createPlayer(playerZones.start);
         this.player = player;
 
+        //create player StartPosition
+        if (this.getCurrentLevel() === 1) {
+            const startPoint = this.add.image(playerZones.start.x - 35, playerZones.start.y + 5, 'bonfire')
+                .setOrigin(0.5, 1)
+                .setScale(0.08)
+                .setFlipX(true)
+                .setDepth(-1)
+
+        }
+        else if (this.getCurrentLevel() === 2) {
+            const startPoint = this.add.sprite(playerZones.start.x - 35, playerZones.start.y + 5, 'portal-2')
+                .setOrigin(0.5, 1)
+                .setScale(2)
+                .setDepth(-1);
+            startPoint.play("portal_2");
+        }
+
+
+        const bonfire = this.add.image('bonfire')
+            .setOrigin(0.5, 1)
+
+
         // create an end zone
         this.createEndOfLevel(playerZones.end, player);
 
@@ -321,13 +343,20 @@ class Scene1 extends Phaser.Scene {
         portalAnimation(this.anims);
         const portal = this.add.sprite(end.x, end.y, `portal-${this.getCurrentLevel()}`).setOrigin(0.5, 1);
         portal.setScale(2);
+        portal.setDepth(-1);
         portal.play(`portal_${this.getCurrentLevel()}`);
         const endOfLevel = this.physics.add.sprite(end.x, end.y, 'end').setAlpha(0).setSize(25, 60).setOrigin(0.5, 1).setOffset(5, -30);
 
         const eolOverlap = this.physics.add.overlap(player, endOfLevel, () => {
             eolOverlap.active = false;
-            this.registry.inc('level', 1);
-            this.scene.restart({ gameStatus: 'LEVEL_COMPLETED' });
+            if (this.getCurrentLevel() === 1) {
+
+                this.registry.inc('level', 1);
+                this.scene.restart({ gameStatus: 'LEVEL_COMPLETED' });
+            }
+            else if (this.getCurrentLevel() === 2) {
+                window.location.href = "main.html";
+            }
         })
     }
 
