@@ -144,6 +144,15 @@ function PlayerAnimation(anims) {
             repeat: 0
         });
     }
+
+    if (!anims.exists('death')) {
+        anims.create({
+            key: "death",
+            frames: anims.generateFrameNumbers("avatar-death", { start: 0, end: 9 }),
+            frameRate: 8,
+            repeat: 0
+        });
+    }
 }
 
 

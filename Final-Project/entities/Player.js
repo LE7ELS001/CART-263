@@ -157,12 +157,21 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             return;
         }
 
+        if (this.health <= 0) return;
 
         if (this.getBounds().top > this.gameConfig.height) {
-            //add sound effect 
-            window.EventEmitter.emit('PLAYER_LOOSE');
+            this.play('death', true);
+            this.once('animationcomplete', () => {
+                window.EventEmitter.emit('PLAYER_LOOSE');
+            });
             return;
         }
+
+        // if (this.getBounds().top > this.gameConfig.height) {
+        //     //add sound effect 
+        //     window.EventEmitter.emit('PLAYER_LOOSE');
+        //     return;
+        // }
 
 
 
@@ -404,9 +413,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.isLaunchAnimationPlaying = false;
         this.health -= source.damage || source.properties.damage || 0;
 
+
         if (this.health <= 0) {
-            window.EventEmitter.emit('PLAYER_LOOSE');
+            this.anims.stop();
+            this.play('death', true);
+            this.once('animationcomplete', () => {
+                window.EventEmitter.emit('PLAYER_LOOSE');
+            });
             return;
+            // window.EventEmitter.emit('PLAYER_LOOSE');
+            // return;
         }
 
         this.anims.stop();

@@ -314,6 +314,9 @@ class Scene1 extends Phaser.Scene {
     createPlayer(start) {
 
         const player = new Player(this, start.x, start.y);
+        if (this.getCurrentLevel() === 1) {
+
+        }
 
         return player;
     }
