@@ -159,19 +159,19 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         if (this.health <= 0) return;
 
-        if (this.getBounds().top > this.gameConfig.height) {
-            this.play('death', true);
-            this.once('animationcomplete', () => {
-                window.EventEmitter.emit('PLAYER_LOOSE');
-            });
-            return;
-        }
-
         // if (this.getBounds().top > this.gameConfig.height) {
-        //     //add sound effect 
-        //     window.EventEmitter.emit('PLAYER_LOOSE');
+        //     this.play('death', true);
+        //     this.once('animationcomplete', () => {
+        //         window.EventEmitter.emit('PLAYER_LOOSE');
+        //     });
         //     return;
         // }
+
+        if (this.getBounds().top > this.gameConfig.height) {
+            //add sound effect 
+            window.EventEmitter.emit('PLAYER_LOOSE');
+            return;
+        }
 
 
 
