@@ -25,7 +25,9 @@ class Scene1 extends Phaser.Scene {
 
 
 
-
+        console.log(this.textures.exists('avatar-idle'));
+        console.log(this.textures.exists('avatar-run'));
+        console.log(this.textures.exists('avatar-jump'));
 
 
 
@@ -391,27 +393,27 @@ class Scene1 extends Phaser.Scene {
 
     createGameEvent() {
         window.EventEmitter.on('PLAYER_LOOSE', () => {
-          const bgm = this.sound.get('bgm-forest');
-          if (bgm && bgm.isPlaying) {
-            bgm.stop(); 
-          }
-          this.scene.restart({ gameStatus: 'PLAYER_LOOSE' });
+            const bgm = this.sound.get('bgm-forest');
+            if (bgm && bgm.isPlaying) {
+                bgm.stop();
+            }
+            this.scene.restart({ gameStatus: 'PLAYER_LOOSE' });
         });
-      }
-      
+    }
+
 
     playBgMusic() {
         const bgm = this.sound.get('bgm-forest');
-        if (bgm && bgm.isPlaying) return; 
-      
+        if (bgm && bgm.isPlaying) return;
+
         if (!bgm) {
-          this.sound.add('bgm-forest', { loop: true, volume: 0.5 }).play();
+            this.sound.add('bgm-forest', { loop: true, volume: 0.5 }).play();
         } else {
-          bgm.play(); 
+            bgm.play();
         }
-      }
-      
-      
+    }
+
+
 
     savePlayerData() {
         if (this.player) {
